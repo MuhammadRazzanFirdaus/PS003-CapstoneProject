@@ -97,7 +97,7 @@ export default function SideBar() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -6 }}
                   transition={{ duration: 0.2 }}
-                  className="text-sm text-gray-200 whitespace-nowrap"
+                  className="text-sm text-gray-200 whitespace-nowrap font-medium"
                 >
                   Logout
                 </motion.span>
