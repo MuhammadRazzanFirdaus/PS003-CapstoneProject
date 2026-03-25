@@ -8,7 +8,8 @@ class GoalSaving extends Model
 {
     protected $fillable = ['goal_id', 'amount', 'note', 'date'];
 
-    public function goal() {
+    public function goal()
+    {
         return $this->belongsTo(Goal::class);
     }
 }
