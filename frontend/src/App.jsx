@@ -1,121 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { motion } from "framer-motion";
+import StreakCard from "./components/card/StreakCard";
+import SummaryCard from "./components/card/SummaryCard";
+import GoalPreview from "./components/section/GoalPreview";
+import TransactionPreview from "./components/section/TransactionPreview";
+import WelcomeBanner from "./components/section/WelcomeBanner";
 
-function App() {
-  const [count, setCount] = useState(0)
+const fadeUp = {
+  hidden: { opacity: 0, y: 16 },
+  show: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, delay: i * 0.08, ease: "easeOut" },
+  }),
+};
 
+export default function App() {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="flex flex-col gap-4 p-6">
+      <motion.div
+        custom={0}
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+        className="p-4"
+      >
+        <WelcomeBanner name="Zanny"/>
+      </motion.div>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      <motion.div
+        custom={1}
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+        className="p-4 flex justify-between gap-4"
+      >
+        <div className="flex max-w-408 w-full gap-4 border-[#E5E7EB] rounded-xl px-2 py-5 bg-white">
+          <SummaryCard label="Total Saved" value="Rp15.340.404" />
+          <SummaryCard label="Income" value="Rp432.000" badge="↑" badgeColor="green" />
+          <SummaryCard label="Expense" value="Rp53.000" badge="↓" badgeColor="red" />
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <div className="px-2 border-[#E5E7EB] rounded-xl flex items-center justify-center w-full max-w-35 bg-white">
+          <StreakCard streak={12} />
+        </div>
+      </motion.div>
+
+      <motion.div custom={2} variants={fadeUp} initial="hidden" animate="show">
+        <GoalPreview />
+      </motion.div>
+
+      <motion.div custom={3} variants={fadeUp} initial="hidden" animate="show">
+        <TransactionPreview />
+      </motion.div>
+    </div>
+  );
 }
-
-export default App
