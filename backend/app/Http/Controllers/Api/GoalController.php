@@ -12,7 +12,6 @@ class GoalController extends Controller
 {
     public function index(Request $request)
     {
-   
         $userId = $request->query('user_id');
 
         $goals = Goal::withSum('savings', 'amount')
@@ -27,10 +26,11 @@ class GoalController extends Controller
     public function store(StoreGoalRequest $request)
     {
         try {
-   
+  
             $data = $request->validated();
-
             $data['user_id'] = $request->user_id;
+
+            $data['initial_amount'] = $data['initial_amount'] ?? 0;
 
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('goals', 'public');
@@ -57,21 +57,22 @@ class GoalController extends Controller
             ], 500);
         }
     }
+
     public function update(Request $request, $id)
     {
         $goal = Goal::findOrFail($id);
+        
         $goal->update($request->all());
+        
         return response()->json(['success' => true, 'data' => $goal]);
     }
 
     public function destroy($id)
     {
         try {
-
             $goal = Goal::findOrFail($id);
 
             if ($goal->image) {
-      
                 Storage::disk('public')->delete($goal->image);
             }
             
