@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MdArrowBackIos } from "react-icons/md";
-import { createGoal } from "../../api/goals";
+import { createGoal } from "../../api/fingo";
 import GoalImageUpload from "../../components/goal-create/GoalImageUpload";
 import GoalFormFields from "../../components/goal-create/GoalFormFields";
 import GoalRecommendation from "../../components/goal-create/GoalRecommendation";
@@ -42,6 +42,16 @@ export default function GoalCreate() {
     setImagePreview(preview);
   };
 
+  const calcDays = () => {
+    if (!form.target_date) return 0;
+    return Math.max(
+      1,
+      Math.ceil(
+        (new Date(form.target_date) - new Date()) / (1000 * 60 * 60 * 24),
+      ),
+    );
+  };
+
   const getRecAndAlert = () => {
     const target = Number(form.target_amount) || 0;
     const initial = Number(form.initial_amount) || 0;
@@ -50,12 +60,7 @@ export default function GoalCreate() {
 
     if (!form.target_date || remaining <= 0) return { rec: null, alert: null };
 
-    const days = Math.max(
-      1,
-      Math.ceil(
-        (new Date(form.target_date) - new Date()) / (1000 * 60 * 60 * 24),
-      ),
-    );
+    const days = calcDays();
     const weeks = Math.max(1, Math.ceil(days / 7));
     const months = Math.max(1, Math.ceil(days / 30));
 
@@ -100,15 +105,30 @@ export default function GoalCreate() {
     setLoading(true);
     setError(null);
     try {
+      const target = Number(form.target_amount) || 0;
+      const initial = Number(form.initial_amount) || 0;
+      const savingAmount = Number(form.saving_amount) || 0;
+      const remaining = target - initial;
+
+      const days = calcDays();
+      const weeks = Math.max(1, Math.ceil(days / 7));
+      const months = Math.max(1, Math.ceil(days / 30));
+
+      let totalSaved = 0;
+      if (form.saving_period === "daily") totalSaved = savingAmount * days;
+      if (form.saving_period === "weekly") totalSaved = savingAmount * weeks;
+      if (form.saving_period === "monthly") totalSaved = savingAmount * months;
+
+      const status =
+        savingAmount > 0 && totalSaved < remaining
+          ? "not_achieved"
+          : "in_progress";
+
       const formData = new FormData();
-      Object.entries(form).forEach(([key, val]) => {
+      Object.entries({ ...form, status }).forEach(([key, val]) => {
         if (val !== "") formData.append(key, val);
       });
       if (image) formData.append("image", image);
-
-      for (let [key, val] of formData.entries()) {
-        console.log(key, val);
-      }
 
       await createGoal(formData);
       navigate("/goals");

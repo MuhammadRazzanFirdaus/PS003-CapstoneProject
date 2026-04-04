@@ -14,7 +14,6 @@ const categories = [
 export default function GoalFormFields({ form, onChange }) {
   return (
     <div className="flex flex-col gap-4">
-      {/* Name + Category */}
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-gray-700">
@@ -46,7 +45,7 @@ export default function GoalFormFields({ form, onChange }) {
         </div>
       </div>
 
-      {/* Target Amount + Saving Amount */}
+
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-gray-700">
@@ -93,7 +92,7 @@ export default function GoalFormFields({ form, onChange }) {
         </div>
       </div>
 
-      {/* Initial Amount + Target Date */}
+
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-gray-700">
