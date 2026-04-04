@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
-import StreakCard from "./components/card/StreakCard";
-import SummaryCard from "./components/card/SummaryCard";
-import GoalPreview from "./components/section/GoalPreview";
-import TransactionPreview from "./components/section/TransactionPreview";
-import WelcomeBanner from "./components/section/WelcomeBanner";
+import StreakCard from "./components/dashboard/StreakCard";
+import SummaryCard from "./components/dashboard/SummaryCard";
+import GoalPreview from "./components/dashboard/GoalPreview";
+import TransactionPreview from "./components/dashboard/TransactionPreview";
+import WelcomeBanner from "./components/dashboard/WelcomeBanner";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
