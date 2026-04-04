@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MdArrowBackIos } from "react-icons/md";
 import { createGoal } from "../../api/fingo";
+import { getAuthUserId } from "../../utils/auth";
 import GoalImageUpload from "../../components/goal-create/GoalImageUpload";
 import GoalFormFields from "../../components/goal-create/GoalFormFields";
 import GoalRecommendation from "../../components/goal-create/GoalRecommendation";
@@ -110,6 +111,12 @@ export default function GoalCreate() {
       const savingAmount = Number(form.saving_amount) || 0;
       const remaining = target - initial;
 
+      const authUserId = getAuthUserId();
+      if (!authUserId) {
+        setError("Silakan login ulang sebelum membuat goal.");
+        return;
+      }
+
       const days = calcDays();
       const weeks = Math.max(1, Math.ceil(days / 7));
       const months = Math.max(1, Math.ceil(days / 30));
@@ -125,9 +132,11 @@ export default function GoalCreate() {
           : "in_progress";
 
       const formData = new FormData();
-      Object.entries({ ...form, status }).forEach(([key, val]) => {
-        if (val !== "") formData.append(key, val);
-      });
+      Object.entries({ ...form, status, user_id: authUserId }).forEach(
+        ([key, val]) => {
+          if (val !== "") formData.append(key, val);
+        },
+      );
       if (image) formData.append("image", image);
 
       await createGoal(formData);
