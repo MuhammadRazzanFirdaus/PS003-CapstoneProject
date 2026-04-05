@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getGoals, getSavingsByGoal } from "../api/goals";
+import { getGoals, getSavingsByGoal } from "../api/fingo";
 
 export function useGoalDetail(id) {
   const [goal, setGoal] = useState(null);
