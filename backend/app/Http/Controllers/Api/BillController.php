@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreBillRequest;
+use App\Http\Requests\UpdateBillStatusRequest;
 use App\Models\Bill;
 use Illuminate\Http\Request;
 
@@ -18,22 +20,15 @@ class BillController extends Controller
             return response()->json(['success' => true, 'data' => $bills]);
         }
 
-    public function store(Request $request)
+    public function store(StoreBillRequest $request)
     {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'name' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'due_date' => 'required|date',
-            'category' => 'required|string',
-            'is_paid' => 'boolean'
-        ]);
+        $validated = $request->validated();
 
         $bill = Bill::create($validated);
         return response()->json(['success' => true, 'data' => $bill], 201);
     }
 
-    public function updateStatus(Request $request, $id)
+    public function updateStatus(UpdateBillStatusRequest $request, $id)
     {
             $bill = Bill::findOrFail($id);
             $bill->update([
