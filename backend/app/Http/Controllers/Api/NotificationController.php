@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreNotificationRequest;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 
@@ -18,15 +19,9 @@ class NotificationController extends Controller
         return response()->json(['success' => true, 'data' => $notifications]);
     }
 
-    public function store(Request $request)
+    public function store(StoreNotificationRequest $request)
     {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'title' => 'required|string|max:255',
-            'message' => 'required|string',
-            'type' => 'required|string',
-            'goal_id' => 'nullable|exists:goals,id'
-        ]);
+        $validated = $request->validated();
 
         $notification = Notification::create($validated);
         return response()->json(['success' => true, 'data' => $notification], 201);
