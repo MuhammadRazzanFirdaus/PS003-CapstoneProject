@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { MdArrowBackIos, MdOutlineNotificationsNone, MdLogout } from "react-icons/md";
+import { MdArrowBackIos, MdOutlineNotificationsNone, MdLogout, MdLogin } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
 import { TbTargetArrow } from "react-icons/tb";
 import { RiBillLine } from "react-icons/ri";
@@ -103,46 +103,48 @@ export default function SideBar() {
 
 
       <div className="border-t border-gray-700 px-2 py-3 shrink-0">
-        <div className="flex items-center gap-3 px-2">
-          {user?.image ? (
-            <img
-              src={user.image}
-              alt={user.name || "User avatar"}
-              className="w-8 h-8 rounded-full object-cover shrink-0"
-            />
-          ) : (
-            <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold shrink-0">
-              {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
-            </div>
-          )}
-          <AnimatePresence>
-            {isOpen && (
-              <motion.div
-                initial={{ opacity: 0, x: -6 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -6 }}
-                transition={{ duration: 0.2 }}
-                className="flex flex-col"
-              >
-                <span className="text-sm font-medium whitespace-nowrap">
-                  {user?.name || "Username"}
-                </span>
-                <span className="text-xs text-gray-400 whitespace-nowrap">
-                  {user?.email || "user@email.com"}
-                </span>
-              </motion.div>
+        {user && (
+          <div className="flex items-center gap-3 px-2">
+            {user?.image ? (
+              <img
+                src={user.image}
+                alt={user.name || "User avatar"}
+                className="w-8 h-8 rounded-full object-cover shrink-0"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold shrink-0">
+                {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+              </div>
             )}
-          </AnimatePresence>
-        </div>
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -6 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col"
+                >
+                  <span className="text-sm font-medium whitespace-nowrap">
+                    {user?.name || "Username"}
+                  </span>
+                  <span className="text-xs text-gray-400 whitespace-nowrap">
+                    {user?.email || "user@email.com"}
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
 
         <div className="my-2">
           <button
-            onClick={handleLogout}
+            onClick={user ? handleLogout : () => navigate("/login")}
             disabled={loggingOut}
             className="w-full flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-gray-700 transition-colors group disabled:opacity-50"
           >
             <span className="w-8 h-8 flex items-center justify-center rounded-md bg-gray-800 group-hover:bg-gray-600 transition-colors shrink-0">
-              <MdLogout size={18} />
+              {user ? <MdLogout size={18} /> : <MdLogin size={18} />}
             </span>
             <AnimatePresence>
               {isOpen && (
@@ -153,7 +155,7 @@ export default function SideBar() {
                   transition={{ duration: 0.2 }}
                   className="text-sm text-gray-200 whitespace-nowrap font-medium"
                 >
-                  {loggingOut ? "Logging out..." : "Logout"}
+                  {user ? (loggingOut ? "Logging out..." : "Logout") : "Login"}
                 </motion.span>
               )}
             </AnimatePresence>

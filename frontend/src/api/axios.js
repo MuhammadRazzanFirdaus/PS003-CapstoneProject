@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAuthToken } from "../utils/auth";
+import { getAuthToken, removeAuthToken } from "../utils/auth";
 
 const api = axios.create({
   baseURL: "http://127.0.0.1:8000/api",
@@ -14,6 +14,17 @@ api.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      removeAuthToken();
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
 );
 
 export default api;
