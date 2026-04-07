@@ -15,8 +15,10 @@ export const deleteGoal = (id) => api.delete(`/goals/${id}`);
 export const getCurrentUser = () => api.get("/user");
 
 // Savings
-export const createSaving = (goalId, data) => api.post(`/goals/${goalId}/savings`, data);
-export const getSavingsByGoal = () => Promise.resolve({ data: [] });
+export const createSaving = (goalId, data) =>
+  api.post(`/goals/${goalId}/savings`, data);
+export const getSavingsByGoal = (goalId) => api.get(`/goals/${goalId}/savings`);
 export const getSaving = (savingId) => api.get(`/savings/${savingId}`);
-export const updateSaving = (savingId, data) => api.put(`/savings/${savingId}`, data);
+export const updateSaving = (savingId, data) =>
+  api.put(`/savings/${savingId}`, data);
 export const deleteSaving = (savingId) => api.delete(`/savings/${savingId}`);
