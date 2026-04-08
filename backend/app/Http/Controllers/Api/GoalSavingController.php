@@ -1,79 +1,99 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Goal;
-use App\Models\GoalSaving;
-use App\Http\Requests\StoreGoalSavingRequest; 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreGoalRequest;
+use Illuminate\Support\Facades\Storage;
 
-class GoalSavingController extends Controller
+class GoalController extends Controller
 {
+    public function index(Request $request)
+    {
+        $userId = $request->query('user_id');
 
-    public function store(StoreGoalSavingRequest $request, $goalId)
+        $goals = Goal::withSum('savings', 'amount')
+            ->when($userId, function ($query) use ($userId) {
+                return $query->where('user_id', $userId);
+            })
+            ->get();
+
+        return response()->json(['success' => true, 'data' => $goals]);
+    }
+
+    public function store(StoreGoalRequest $request)
     {
         try {
 
-            $validated = $request->validated();
-            
-            $goal = Goal::findOrFail($goalId);
-            
-            // Relasi otomatis akan mengisi goal_id
-            $saving = $goal->savings()->create($validated);
+            $data = $request->validated();
+            $data['user_id'] = $request->user_id;
+
+            $data['initial_amount'] = $data['initial_amount'] ?? 0;
+
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('goals', 'public');
+                $data['image'] = $path;
+            }
+
+            $goal = Goal::create($data);
+
+            if ($goal->image) {
+                $goal->image_url = asset('storage/' . $goal->image);
+            }
 
             return response()->json([
-                'success' => true, 
-                'message' => 'Saving added.', 
-                'data' => $saving
+                'success' => true,
+                'message' => 'Goal berhasil dibuat!',
+                'data' => $goal
             ], 201);
 
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        } catch (\Exception $e) {
             return response()->json([
-                'success' => false, 
-                'message' => 'Goal not found.'
-            ], 404);
+                'success' => false,
+                'message' => 'Gagal menyimpan.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
-    public function show($id)
+    public function update(Request $request, $id)
     {
-        $saving = GoalSaving::find($id);
-        
-        if (!$saving) {
-            return response()->json(['success' => false, 'message' => 'Saving not found.'], 404);
-        }
-        
-        return response()->json(['success' => true, 'data' => $saving], 200);
-    }
+        $goal = Goal::findOrFail($id);
 
-    public function update(StoreGoalSavingRequest $request, $id)
-    {
-        try {
-            $validated = $request->validated();
+        $goal->update($request->all());
 
-            $saving = GoalSaving::findOrFail($id);
-            $saving->update($validated);
-
-            return response()->json([
-                'success' => true, 
-                'message' => 'Saving updated.', 
-                'data' => $saving
-            ], 200);
-
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json(['success' => false, 'message' => 'Saving not found.'], 404);
-        }
+        return response()->json(['success' => true, 'data' => $goal]);
     }
 
     public function destroy($id)
     {
         try {
-            $saving = GoalSaving::findOrFail($id);
-            $saving->delete();
+            $goal = Goal::findOrFail($id);
 
-            return response()->json(['success' => true, 'message' => 'Saving deleted.'], 200);
+            if ($goal->image) {
+                Storage::disk('public')->delete($goal->image);
+            }
+
+            $goal->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Goal dan file gambar berhasil dihapus!'
+            ], 200);
+
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json(['success' => false, 'message' => 'Saving not found.'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan.'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus.',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 }
