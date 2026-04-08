@@ -20,11 +20,9 @@ class GoalController extends Controller
                 return $query->where('user_id', $userId);
             })
             ->get();
-        
-        // Sync each goal status in DB if it's stale
+
         $goals->each->syncStatus();
 
-        // Filter by dynamic status if requested
         if ($statusFilter) {
             $goals = $goals->filter(function ($goal) use ($statusFilter) {
                 return $goal->current_status === $statusFilter;
@@ -50,7 +48,6 @@ class GoalController extends Controller
 
             $goal = Goal::create($data);
 
-            // Sync status immediately after creation
             $goal->syncStatus();
 
             if ($goal->image) {
@@ -78,7 +75,6 @@ class GoalController extends Controller
 
         $goal->update($request->all());
 
-        // Sync status after update
         $goal->syncStatus();
 
         return response()->json(['success' => true, 'data' => $goal]);
