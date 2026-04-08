@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GoalSaving extends Model
 {
-    protected $fillable = ['goal_id', 'amount', 'note', 'date'];
+    protected $fillable = ['goal_id', 'amount', 'note'];
 
     public function goal()
     {
