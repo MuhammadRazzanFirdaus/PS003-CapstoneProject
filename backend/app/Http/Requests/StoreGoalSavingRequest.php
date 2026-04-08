@@ -16,7 +16,6 @@ class StoreGoalSavingRequest extends FormRequest
         return [
             'amount' => 'required|numeric|min:1',
             'note' => 'nullable|string',
-            'date' => 'required|date',
         ];
     }
 }

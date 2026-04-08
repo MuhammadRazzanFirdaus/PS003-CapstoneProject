@@ -16,7 +16,6 @@ class Goal extends Model
         'saving_amount', 
         'saving_period', 
         'initial_amount', 
-        'daily_target', 
         'target_date', 
         'status'
     ];
@@ -53,16 +52,23 @@ class Goal extends Model
     {
         $current = (float)$this->current_savings;
         $target = (float)$this->target_amount;
-        $daily = (float)($this->daily_target ?? 0);
-        $daysPassed = (int)$this->days_passed;
 
         if ($current >= $target) {
             return 'completed';
         }
 
-        $expected = $daysPassed * $daily;
+        // Dynamic linear projection logic
+        $createdAt = $this->created_at;
+        $targetDate = \Carbon\Carbon::parse($this->target_date);
+        
+        // Total days available from creation to target
+        $totalDays = max(1, $createdAt->diffInDays($targetDate));
+        $daysPassed = (int)$this->days_passed;
 
-        if ($daily > 0 && $current < $expected) {
+        // How much SHOULD have been saved by now based on linear progress
+        $expected = ($daysPassed / $totalDays) * $target;
+
+        if ($current < $expected) {
             return 'not_achieved';
         }
 
