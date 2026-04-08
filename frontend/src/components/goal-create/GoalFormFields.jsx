@@ -1,5 +1,10 @@
 import { MdOutlineWallet, MdCalendarToday } from "react-icons/md";
 
+const formatRupiah = (val) => {
+  if (!val) return "";
+  return new Intl.NumberFormat("id-ID").format(Number(val));
+};
+
 const categories = [
   "Liburan",
   "Elektronik",
@@ -12,6 +17,11 @@ const categories = [
 ];
 
 export default function GoalFormFields({ form, onChange }) {
+  const handleNumericChange = (e, fieldName) => {
+    const rawValue = e.target.value.replace(/\D/g, "");
+    onChange({ target: { name: fieldName, value: rawValue } });
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 gap-4">
@@ -55,9 +65,9 @@ export default function GoalFormFields({ form, onChange }) {
             <MdOutlineWallet size={16} className="text-gray-400 shrink-0" />
             <input
               name="target_amount"
-              type="number"
-              value={form.target_amount}
-              onChange={onChange}
+              type="text"
+              value={form.target_amount ? formatRupiah(form.target_amount) : ""}
+              onChange={(e) => handleNumericChange(e, "target_amount")}
               placeholder="0"
               className="flex-1 text-sm outline-none"
             />
@@ -71,9 +81,9 @@ export default function GoalFormFields({ form, onChange }) {
             <MdOutlineWallet size={16} className="text-gray-400 shrink-0" />
             <input
               name="saving_amount"
-              type="number"
-              value={form.saving_amount}
-              onChange={onChange}
+              type="text"
+              value={form.saving_amount ? formatRupiah(form.saving_amount) : ""}
+              onChange={(e) => handleNumericChange(e, "saving_amount")}
               placeholder="0"
               className="flex-1 text-sm outline-none"
             />
@@ -102,9 +112,9 @@ export default function GoalFormFields({ form, onChange }) {
             <MdOutlineWallet size={16} className="text-gray-400 shrink-0" />
             <input
               name="initial_amount"
-              type="number"
-              value={form.initial_amount}
-              onChange={onChange}
+              type="text"
+              value={form.initial_amount ? formatRupiah(form.initial_amount) : ""}
+              onChange={(e) => handleNumericChange(e, "initial_amount")}
               placeholder="0"
               className="flex-1 text-sm outline-none"
             />

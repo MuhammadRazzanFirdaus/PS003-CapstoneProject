@@ -1,7 +1,7 @@
 import { MdArrowBackIos } from "react-icons/md";
 import { motion } from "framer-motion";
 
-export default function GoalDetailHeader({ onBack, fadeUp }) {
+export default function GoalDetailHeader({ onBack, onAddFunds, fadeUp }) {
   return (
     <motion.div
       custom={0}
@@ -16,7 +16,7 @@ export default function GoalDetailHeader({ onBack, fadeUp }) {
       >
         <MdArrowBackIos size={14} /> Back
       </button>
-      <button className="flex items-center gap-2 bg-gray-900 text-white text-sm px-4 py-2 rounded-xl hover:bg-gray-700 transition-colors">
+      <button onClick={onAddFunds} className="flex items-center gap-2 bg-gray-900 text-white text-sm px-4 py-2 rounded-xl hover:bg-gray-700 transition-colors">
         + Add Funds
       </button>
     </motion.div>

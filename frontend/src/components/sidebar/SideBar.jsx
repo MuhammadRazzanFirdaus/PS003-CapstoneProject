@@ -104,7 +104,7 @@ export default function SideBar() {
 
       <div className="border-t border-gray-700 px-2 py-3 shrink-0">
         {user && (
-          <div className="flex items-center gap-3 px-2">
+          <div className="flex items-center gap-3 px-2 overflow-hidden">
             {user?.image ? (
               <img
                 src={user.image}
@@ -123,12 +123,12 @@ export default function SideBar() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -6 }}
                   transition={{ duration: 0.2 }}
-                  className="flex flex-col"
+                  className="flex flex-col flex-1 min-w-0 overflow-hidden"
                 >
-                  <span className="text-sm font-medium whitespace-nowrap">
+                  <span className="text-sm font-medium truncate">
                     {user?.name || "Username"}
                   </span>
-                  <span className="text-xs text-gray-400 whitespace-nowrap">
+                  <span className="text-xs text-gray-400 truncate">
                     {user?.email || "user@email.com"}
                   </span>
                 </motion.div>
