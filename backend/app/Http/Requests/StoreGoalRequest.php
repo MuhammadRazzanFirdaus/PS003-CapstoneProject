@@ -22,7 +22,6 @@ class StoreGoalRequest extends FormRequest
             'saving_amount'  => 'nullable|numeric|min:0',
             'saving_period'  => 'nullable|string|in:daily,weekly,monthly',
             'initial_amount' => 'nullable|numeric|min:0',
-            'daily_target'   => 'nullable|numeric|min:0',
             'target_date'    => 'required|date|after_or_equal:today',
             'status'         => 'nullable|string|in:in_progress,completed,not_achieved',
         ];
