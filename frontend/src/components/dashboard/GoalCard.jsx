@@ -1,25 +1,26 @@
 import { Link } from "react-router-dom";
 import { MdOutlineWarningAmber } from "react-icons/md";
 
-const getBarColor = (progress, isNotAchieved) => {
+const getBarColor = (progress, isNotAchieved, isCompleted) => {
+  if (isCompleted || progress >= 100) return "bg-green-500";
   if (isNotAchieved) return "bg-yellow-500";
-  if (progress >= 100) return "bg-green-500";
   if (progress >= 50) return "bg-yellow-500";
   return "bg-red-500";
 };
 
 function checkNotAchieved(goal) {
-  if (goal.status === "not_achieved") return true;
+  const initial = Number(goal.initial_amount) || 0;
+  const target = Number(goal.target_amount) || 0;
+  const savingsSum = Number(goal.savings_sum_amount) || 0;
+  const remaining = target - (initial + savingsSum);
+
+  if (remaining <= 0) return false;
   if (goal.status === "completed") return false;
+  if (goal.status === "not_achieved") return true;
   if (!goal.target_date || !goal.saving_amount || !goal.saving_period)
     return false;
 
-  const initial = Number(goal.initial_amount) || 0;
-  const target = Number(goal.target_amount) || 0;
   const savingAmount = Number(goal.saving_amount) || 0;
-  const remaining = target - initial;
-
-  if (remaining <= 0) return false;
 
   const days = Math.max(
     1,
@@ -48,19 +49,22 @@ export default function GoalCard({
   saving_amount,
   saving_period,
   target_date,
+  savings_sum_amount,
 }) {
-  const collected = Number(initial_amount) || 0;
+  const collected = (Number(initial_amount) || 0) + (Number(savings_sum_amount) || 0);
   const target = Number(target_amount) || 0;
-  const remaining = target - collected;
+  const remaining = Math.max(0, target - collected);
   const progress =
     target > 0 ? Math.min(Math.round((collected / target) * 100), 100) : 0;
-  const isNotAchieved = checkNotAchieved({
+  const isCompleted = collected >= target || status === "completed";
+  const isNotAchieved = !isCompleted && checkNotAchieved({
     status,
     target_date,
     saving_amount,
     saving_period,
     initial_amount,
     target_amount,
+    savings_sum_amount,
   });
 
   return (
@@ -79,7 +83,7 @@ export default function GoalCard({
             <span className="text-gray-500">
               Rp{collected.toLocaleString("id-ID")}
             </span>
-            {status === "completed" ? (
+            {isCompleted ? (
               <span className="text-green-500 font-medium">Completed</span>
             ) : isNotAchieved ? (
               <span className="text-yellow-500 font-medium flex items-center gap-1">
@@ -95,7 +99,7 @@ export default function GoalCard({
           <div className="flex items-center gap-2">
             <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full ${getBarColor(progress, isNotAchieved)}`}
+                className={`h-full rounded-full ${getBarColor(progress, isNotAchieved, isCompleted)}`}
                 style={{ width: `${progress}%` }}
               />
             </div>

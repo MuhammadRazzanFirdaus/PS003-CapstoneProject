@@ -36,8 +36,16 @@ function StatSkeleton() {
 
 export default function GoalStatCards({ goals, loading, fadeUp }) {
   const totalGoals = goals.length;
-  const completed = goals.filter((g) => g.status === "completed").length;
-  const inProgress = goals.filter((g) => g.status === "in_progress").length;
+  const completed = goals.filter((g) => {
+    const collected = (Number(g.initial_amount) || 0) + (Number(g.savings_sum_amount) || 0);
+    const target = Number(g.target_amount) || 0;
+    return g.status === "completed" || collected >= target;
+  }).length;
+  const inProgress = goals.filter((g) => {
+    const collected = (Number(g.initial_amount) || 0) + (Number(g.savings_sum_amount) || 0);
+    const target = Number(g.target_amount) || 0;
+    return g.status !== "completed" && collected < target;
+  }).length;
   const savedForGoals = goals.reduce(
     (acc, g) => acc + (Number(g.initial_amount) || 0),
     0,
