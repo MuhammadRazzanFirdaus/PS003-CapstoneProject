@@ -26,7 +26,7 @@ class GoalController extends Controller
     public function store(StoreGoalRequest $request)
     {
         try {
-  
+
             $data = $request->validated();
             $data['user_id'] = $request->user_id;
 
@@ -61,9 +61,9 @@ class GoalController extends Controller
     public function update(Request $request, $id)
     {
         $goal = Goal::findOrFail($id);
-        
+
         $goal->update($request->all());
-        
+
         return response()->json(['success' => true, 'data' => $goal]);
     }
 
@@ -75,7 +75,7 @@ class GoalController extends Controller
             if ($goal->image) {
                 Storage::disk('public')->delete($goal->image);
             }
-            
+
             $goal->delete();
 
             return response()->json([

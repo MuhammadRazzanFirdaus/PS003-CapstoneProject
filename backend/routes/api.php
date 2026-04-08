@@ -25,7 +25,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('goals', GoalController::class);
 
     // goals saving
+<<<<<<< HEAD
     Route::get('goals/{goal}/savings', [GoalSavingController::class, 'index']);
+=======
+    Route::get('goals/{goal}/savings', [GoalSavingController::class, 'index']); // <--- TAMBAHKAN BARIS INI
+>>>>>>> 3bb73034eb25296b8e17326ad0028cff2e9a9ee0
     Route::get('savings/{id}', [GoalSavingController::class, 'show']);
     Route::post('goals/{goal}/savings', [GoalSavingController::class, 'store']);
     Route::put('savings/{id}', [GoalSavingController::class, 'update']);
