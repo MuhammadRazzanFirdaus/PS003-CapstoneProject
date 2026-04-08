@@ -13,12 +13,21 @@ class GoalController extends Controller
     public function index(Request $request)
     {
         $userId = $request->query('user_id');
+        $statusFilter = $request->query('status');
 
         $goals = Goal::withSum('savings', 'amount')
             ->when($userId, function ($query) use ($userId) {
                 return $query->where('user_id', $userId);
             })
             ->get();
+
+        $goals->each->syncStatus();
+
+        if ($statusFilter) {
+            $goals = $goals->filter(function ($goal) use ($statusFilter) {
+                return $goal->current_status === $statusFilter;
+            })->values();
+        }
 
         return response()->json(['success' => true, 'data' => $goals]);
     }
@@ -38,6 +47,8 @@ class GoalController extends Controller
             }
 
             $goal = Goal::create($data);
+
+            $goal->syncStatus();
 
             if ($goal->image) {
                 $goal->image_url = asset('storage/' . $goal->image);
@@ -63,6 +74,8 @@ class GoalController extends Controller
         $goal = Goal::findOrFail($id);
 
         $goal->update($request->all());
+
+        $goal->syncStatus();
 
         return response()->json(['success' => true, 'data' => $goal]);
     }

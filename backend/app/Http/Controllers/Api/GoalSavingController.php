@@ -36,8 +36,9 @@ class GoalSavingController extends Controller
 
             $goal = Goal::findOrFail($goalId);
 
-            // Relasi otomatis akan mengisi goal_id
             $saving = $goal->savings()->create($validated);
+
+            $goal->syncStatus();
 
             return response()->json([
                 'success' => true,
@@ -72,6 +73,8 @@ class GoalSavingController extends Controller
             $saving = GoalSaving::findOrFail($id);
             $saving->update($validated);
 
+            $saving->goal->syncStatus();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Saving updated.',
@@ -87,7 +90,10 @@ class GoalSavingController extends Controller
     {
         try {
             $saving = GoalSaving::findOrFail($id);
+            $goal = $saving->goal;
             $saving->delete();
+
+            $goal->syncStatus();
 
             return response()->json(['success' => true, 'message' => 'Saving deleted.'], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
