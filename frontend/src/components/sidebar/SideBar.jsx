@@ -1,10 +1,14 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { MdArrowBackIos, MdOutlineNotificationsNone, MdLogout } from "react-icons/md";
+import { MdArrowBackIos, MdOutlineNotificationsNone, MdLogout, MdLogin } from "react-icons/md";
 import { RxDashboard } from "react-icons/rx";
 import { TbTargetArrow } from "react-icons/tb";
 import { RiBillLine } from "react-icons/ri";
 import { LuWallet } from "react-icons/lu";
 import { useSidebar } from "../../context/SidebarContext";
+import { logout, getCurrentUser } from "../../api/fingo";
+import { removeAuthToken } from "../../utils/auth";
 import NavItem from "./NavItem";
 
 const navItems = [
@@ -16,7 +20,42 @@ const navItems = [
 ];
 
 export default function SideBar() {
+  const navigate = useNavigate();
   const { isOpen, toggleSidebar } = useSidebar();
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    getCurrentUser()
+      .then((res) => {
+        if (!isMounted) return;
+        const userData = res.data?.data;
+        setUser(userData ?? null);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setUser(null);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    if (loggingOut) return;
+    setLoggingOut(true);
+    try {
+      await logout();
+    } catch (error) {
+      console.warn("Logout failed", error);
+    } finally {
+      removeAuthToken();
+      navigate("/login", { replace: true });
+    }
+  };
 
   return (
     <motion.aside
@@ -24,7 +63,6 @@ export default function SideBar() {
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className="fixed top-0 left-0 h-screen bg-gray-900 text-white z-50 flex flex-col overflow-hidden"
     >
-      {/* Header */}
       <div className="flex items-center py-4 px-4 border-b border-gray-700 shrink-0">
         <AnimatePresence>
           {isOpen && (
@@ -56,39 +94,57 @@ export default function SideBar() {
         </motion.button>
       </div>
 
-      {/* Nav */}
+
       <nav className="flex-1 py-4 flex flex-col gap-1 px-2">
         {navItems.map((item) => (
           <NavItem key={item.label} {...item} />
         ))}
       </nav>
 
-      {/* Footer */}
+
       <div className="border-t border-gray-700 px-2 py-3 shrink-0">
-        <div className="flex items-center gap-3 px-2">
-          <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold shrink-0">
-            U
-          </div>
-          <AnimatePresence>
-            {isOpen && (
-              <motion.div
-                initial={{ opacity: 0, x: -6 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -6 }}
-                transition={{ duration: 0.2 }}
-                className="flex flex-col"
-              >
-                <span className="text-sm font-medium whitespace-nowrap">Username</span>
-                <span className="text-xs text-gray-400 whitespace-nowrap">user@email.com</span>
-              </motion.div>
+        {user && (
+          <div className="flex items-center gap-3 px-2">
+            {user?.image ? (
+              <img
+                src={user.image}
+                alt={user.name || "User avatar"}
+                className="w-8 h-8 rounded-full object-cover shrink-0"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center text-xs font-bold shrink-0">
+                {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+              </div>
             )}
-          </AnimatePresence>
-        </div>
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -6 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex flex-col"
+                >
+                  <span className="text-sm font-medium whitespace-nowrap">
+                    {user?.name || "Username"}
+                  </span>
+                  <span className="text-xs text-gray-400 whitespace-nowrap">
+                    {user?.email || "user@email.com"}
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
 
         <div className="my-2">
-          <button className="w-full flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-gray-700 transition-colors group">
+          <button
+            onClick={user ? handleLogout : () => navigate("/login")}
+            disabled={loggingOut}
+            className="w-full flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-gray-700 transition-colors group disabled:opacity-50"
+          >
             <span className="w-8 h-8 flex items-center justify-center rounded-md bg-gray-800 group-hover:bg-gray-600 transition-colors shrink-0">
-              <MdLogout size={18} />
+              {user ? <MdLogout size={18} /> : <MdLogin size={18} />}
             </span>
             <AnimatePresence>
               {isOpen && (
@@ -99,7 +155,7 @@ export default function SideBar() {
                   transition={{ duration: 0.2 }}
                   className="text-sm text-gray-200 whitespace-nowrap font-medium"
                 >
-                  Logout
+                  {user ? (loggingOut ? "Logging out..." : "Logout") : "Login"}
                 </motion.span>
               )}
             </AnimatePresence>

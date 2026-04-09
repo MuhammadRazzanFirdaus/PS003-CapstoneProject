@@ -17,7 +17,6 @@ class StoreGoalSavingRequest extends FormRequest
             'type' => 'required|in:income,expense',
             'amount' => 'required|numeric|min:1',
             'note' => 'nullable|string',
-            'date' => 'required|date',
         ];
     }
 }

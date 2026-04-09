@@ -12,8 +12,8 @@ class GoalController extends Controller
 {
     public function index(Request $request)
     {
-   
         $userId = $request->query('user_id');
+        $statusFilter = $request->query('status');
 
         $goals = Goal::withSum('savings', 'amount')
             ->when($userId, function ($query) use ($userId) {
@@ -21,16 +21,25 @@ class GoalController extends Controller
             })
             ->get();
 
+        $goals->each->syncStatus();
+
+        if ($statusFilter) {
+            $goals = $goals->filter(function ($goal) use ($statusFilter) {
+                return $goal->current_status === $statusFilter;
+            })->values();
+        }
+
         return response()->json(['success' => true, 'data' => $goals]);
     }
 
     public function store(StoreGoalRequest $request)
     {
         try {
-   
-            $data = $request->validated();
 
+            $data = $request->validated();
             $data['user_id'] = $request->user_id;
+
+            $data['initial_amount'] = $data['initial_amount'] ?? 0;
 
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('goals', 'public');
@@ -38,6 +47,8 @@ class GoalController extends Controller
             }
 
             $goal = Goal::create($data);
+
+            $goal->syncStatus();
 
             if ($goal->image) {
                 $goal->image_url = asset('storage/' . $goal->image);
@@ -57,24 +68,27 @@ class GoalController extends Controller
             ], 500);
         }
     }
+
     public function update(Request $request, $id)
     {
         $goal = Goal::findOrFail($id);
+
         $goal->update($request->all());
+
+        $goal->syncStatus();
+
         return response()->json(['success' => true, 'data' => $goal]);
     }
 
     public function destroy($id)
     {
         try {
-
             $goal = Goal::findOrFail($id);
 
             if ($goal->image) {
-      
                 Storage::disk('public')->delete($goal->image);
             }
-            
+
             $goal->delete();
 
             return response()->json([
