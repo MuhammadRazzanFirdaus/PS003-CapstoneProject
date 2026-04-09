@@ -13,6 +13,8 @@ return new class extends Migration {
         Schema::create('goal_savings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('goal_id')->constrained()->cascadeOnDelete();
+            $table->enum('type', ['income', 'expense']);
+            $table->date('date');
             $table->decimal('amount', 15, 2);
             $table->text('note')->nullable();
             $table->timestamps();
