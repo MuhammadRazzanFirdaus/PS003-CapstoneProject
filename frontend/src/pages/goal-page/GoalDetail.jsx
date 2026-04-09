@@ -1,10 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGoalDetail } from "../../hooks/useGoalDetail";
 import GoalDetailHeader from "../../components/goal-detail/GoalDetailHeader";
 import GoalDetailInfo from "../../components/goal-detail/GoalDetailInfo";
 import GoalDetailStats from "../../components/goal-detail/GoalDetailStats";
 import GoalSavingItem from "../../components/goal-detail/GoalSavingItem";
+import GoalSavingModal from "../../components/goal-detail/GoalSavingModal";
+import axiosInstance from "../../api/axios";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -60,6 +63,22 @@ export default function GoalDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { goal, savings, loading, savingsLoading, error } = useGoalDetail(id);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSaveFunds = async (data) => {
+    try {
+      setIsSubmitting(true);
+      await axiosInstance.post(`/goals/${id}/savings`, data);
+      setIsModalOpen(false);
+      window.location.reload(); // Refresh fully to update goal & savings
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menambahkan dana tabungan.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -86,9 +105,27 @@ export default function GoalDetail() {
     );
   }
 
+  const totalSavings =
+    savings?.reduce((acc, s) => acc + (Number(s.amount) || 0), 0) || 0;
+  const collected = (Number(goal?.initial_amount) || 0) + totalSavings;
+  
+  // Menggunakan data static untuk "Total Saved / Wallet Balance" sementara
+  const limit = 15340404;
+
   return (
     <div className="py-10 px-30 flex flex-col gap-6">
-      <GoalDetailHeader onBack={() => navigate(-1)} fadeUp={fadeUp} />
+      <GoalSavingModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveFunds}
+        limit={limit}
+      />
+
+      <GoalDetailHeader
+        onBack={() => navigate(-1)}
+        onAddFunds={() => setIsModalOpen(true)}
+        fadeUp={fadeUp}
+      />
 
       <motion.h1
         custom={1}
@@ -106,7 +143,7 @@ export default function GoalDetail() {
       <motion.div custom={4} variants={fadeUp} initial="hidden" animate="show">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-bold">Goal Savings</h2>
-          <button className="text-xs text-gray-400 hover:text-gray-600">
+          <button className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">
             View All →
           </button>
         </div>

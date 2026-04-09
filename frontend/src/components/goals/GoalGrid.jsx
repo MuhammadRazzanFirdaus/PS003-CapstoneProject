@@ -75,12 +75,8 @@ function GoalCardSkeleton({ index }) {
 
 export default function GoalGrid({ goals, loading, activeTab }) {
   const filtered = goals.filter((g) => {
-    const collected = (Number(g.initial_amount) || 0) + (Number(g.savings_sum_amount) || 0);
-    const target = Number(g.target_amount) || 0;
-    const isCompleted = g.status === "completed" || collected >= target;
-
-    if (activeTab === "In Progress") return !isCompleted;
-    if (activeTab === "Completed") return isCompleted;
+    if (activeTab === "In Progress") return g.status === "in_progress" || g.status === "not_achieved";
+    if (activeTab === "Completed") return g.status === "completed";
     return true;
   });
 
