@@ -15,7 +15,7 @@ export default function GoalFilterTabs({ activeTab, onTabChange, fadeUp }) {
         <button
           key={tab}
           onClick={() => onTabChange(tab)}
-          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors cursor-pointer ${
             activeTab === tab
               ? "bg-gray-900 text-white"
               : "text-gray-400 hover:text-gray-700"

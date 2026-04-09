@@ -12,11 +12,11 @@ export default function GoalDetailHeader({ onBack, onAddFunds, fadeUp }) {
     >
       <button
         onClick={onBack}
-        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 transition-colors"
+        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 transition-colors cursor-pointer"
       >
         <MdArrowBackIos size={14} /> Back
       </button>
-      <button onClick={onAddFunds} className="flex items-center gap-2 bg-gray-900 text-white text-sm px-4 py-2 rounded-xl hover:bg-gray-700 transition-colors">
+      <button onClick={onAddFunds} className="flex items-center gap-2 bg-gray-900 text-white text-sm px-4 py-2 rounded-xl hover:bg-gray-700 transition-colors cursor-pointer">
         + Add Funds
       </button>
     </motion.div>

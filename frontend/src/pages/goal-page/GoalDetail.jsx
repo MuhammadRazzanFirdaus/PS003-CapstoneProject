@@ -143,7 +143,7 @@ export default function GoalDetail() {
       <motion.div custom={4} variants={fadeUp} initial="hidden" animate="show">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-bold">Goal Savings</h2>
-          <button className="text-xs text-gray-400 hover:text-gray-600">
+          <button className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">
             View All →
           </button>
         </div>

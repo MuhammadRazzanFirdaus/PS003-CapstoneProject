@@ -90,7 +90,7 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit }) {
             <div className="inline-flex items-center p-1 bg-white border border-gray-200 rounded-full w-[240px]">
               <button
                 onClick={() => setType("income")}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-full transition-colors ${
+                className={`flex-1 flex items-center justify-center cursor-pointer gap-2 py-2 text-sm font-medium rounded-full transition-colors ${
                   type === "income"
                     ? "bg-[#0f172a] text-white"
                     : "text-gray-500 hover:text-gray-900"
@@ -100,7 +100,7 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit }) {
               </button>
               <button
                 onClick={() => setType("expense")}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-medium rounded-full transition-colors ${
+                className={`flex-1 flex items-center justify-center cursor-pointer gap-2 py-2 text-sm font-medium rounded-full transition-colors ${
                   type === "expense"
                     ? "bg-[#0f172a] text-white"
                     : "text-gray-500 hover:text-gray-900"
@@ -158,14 +158,14 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit }) {
           <div className="px-6 py-5 bg-white flex items-center justify-end gap-3 mt-auto">
             <button
               onClick={onClose}
-              className="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              className="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={!nominal || (!!error && type === "income")}
-              className="px-6 py-2.5 text-sm font-medium text-white bg-[#0f172a] rounded-lg hover:bg-[#1e293b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 py-2.5 text-sm font-medium text-white bg-[#0f172a] rounded-lg hover:bg-[#1e293b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               Save
             </button>

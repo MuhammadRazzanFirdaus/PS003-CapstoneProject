@@ -82,7 +82,7 @@ export default function SideBar() {
           onClick={toggleSidebar}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors shrink-0 ml-auto"
+          className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors shrink-0 ml-auto cursor-pointer"
         >
           <motion.span
             animate={{ rotate: isOpen ? 0 : 180 }}
@@ -141,7 +141,7 @@ export default function SideBar() {
           <button
             onClick={user ? handleLogout : () => navigate("/login")}
             disabled={loggingOut}
-            className="w-full flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-gray-700 transition-colors group disabled:opacity-50"
+            className="w-full flex items-center gap-3 px-2 py-2.5 rounded-lg hover:bg-gray-700 transition-colors group disabled:opacity-50 cursor-pointer"
           >
             <span className="w-8 h-8 flex items-center justify-center rounded-md bg-gray-800 group-hover:bg-gray-600 transition-colors shrink-0">
               {user ? <MdLogout size={18} /> : <MdLogin size={18} />}
