@@ -12,12 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('goal_savings', function (Blueprint $table) {
-            $table->id() ;
-            $table->foreignId('goal_id')->constrained()->cascadeOnDelete() ;
-            $table->decimal('amount', 12, 2);
-            $table->text('note')->nullable() ;
-            $table->date('date') ;
-            $table->timestamps() ;
+            $table->id();
+            $table->foreignId('goal_id')->constrained()->cascadeOnDelete();
+            $table->decimal('amount', 15, 2);
+            $table->text('note')->nullable();
+            $table->timestamps();
         });
     }
 

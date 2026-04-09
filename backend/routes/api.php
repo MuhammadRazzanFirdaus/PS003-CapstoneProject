@@ -7,14 +7,15 @@ use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\BillController;
 use App\Http\Controllers\Api\NotificationController;
 
-//gols
-Route::apiResource('goals', GoalController::class);
+    //gols
+    Route::apiResource('goals', GoalController::class);
 
-// goals saving
-Route::get('savings/{id}', [GoalSavingController::class, 'show']);          
-Route::post('goals/{goal}/savings', [GoalSavingController::class, 'store']); 
-Route::put('savings/{id}', [GoalSavingController::class, 'update']);        
-Route::delete('savings/{id}', [GoalSavingController::class, 'destroy']);     
+    // goals saving
+    Route::get('goals/{goal}/savings', [GoalSavingController::class, 'index']);
+    Route::get('savings/{id}', [GoalSavingController::class, 'show']);
+    Route::post('goals/{goal}/savings', [GoalSavingController::class, 'store']);
+    Route::put('savings/{id}', [GoalSavingController::class, 'update']);
+    Route::delete('savings/{id}', [GoalSavingController::class, 'destroy']);
 
 // TRANSACTIONS
 Route::get('transactions', [TransactionController::class, 'index']);
