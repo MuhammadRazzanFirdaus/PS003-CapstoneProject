@@ -106,7 +106,10 @@ export default function GoalDetail() {
   }
 
   const totalSavings =
-    savings?.reduce((acc, s) => acc + (Number(s.amount) || 0), 0) || 0;
+    savings?.reduce((acc, s) => {
+      const amount = Number(s.amount) || 0;
+      return s.type === "expense" ? acc - amount : acc + amount;
+    }, 0) || 0;
   const collected = (Number(goal?.initial_amount) || 0) + totalSavings;
   
   // Menggunakan data static untuk "Total Saved / Wallet Balance" sementara
@@ -119,6 +122,7 @@ export default function GoalDetail() {
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveFunds}
         limit={limit}
+        collected={collected}
       />
 
       <GoalDetailHeader

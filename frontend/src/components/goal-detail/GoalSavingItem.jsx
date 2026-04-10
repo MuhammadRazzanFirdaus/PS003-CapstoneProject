@@ -20,8 +20,8 @@ export default function GoalSavingItem({ saving, index }) {
             : "-"}
         </p>
       </div>
-      <p className={`text-sm font-semibold ${Number(saving.amount) < 0 ? "text-red-500" : "text-teal-600"}`}>
-        {Number(saving.amount) < 0 ? "-" : "+"}Rp{Math.abs(Number(saving.amount)).toLocaleString("id-ID")}
+      <p className={`text-sm font-semibold ${saving.type === "expense" ? "text-red-500" : "text-teal-600"}`}>
+        {saving.type === "expense" ? "-" : "+"}Rp{Math.abs(Number(saving.amount)).toLocaleString("id-ID")}
       </p>
     </motion.div>
   );

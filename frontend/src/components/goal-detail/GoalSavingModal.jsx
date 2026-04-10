@@ -11,11 +11,10 @@ const formatRupiah = (number) => {
   }).format(number);
 };
 
-export default function GoalSavingModal({ isOpen, onClose, onSave, limit }) {
+export default function GoalSavingModal({ isOpen, onClose, onSave, limit, collected }) {
   const [type, setType] = useState("income");
   const [note, setNote] = useState("");
   const [nominal, setNominal] = useState("");
-  const [error, setError] = useState("");
 
   // Reset state when modal opens
   useEffect(() => {
@@ -23,7 +22,6 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit }) {
       setType("income");
       setNote("");
       setNominal("");
-      setError("");
     }
   }, [isOpen]);
 
@@ -31,34 +29,35 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit }) {
     // Only allow digits
     const val = e.target.value.replace(/\D/g, "");
     setNominal(val);
+  };
 
-    // Check limit
-    if (Number(val) > limit) {
-      setError(
-        `The nominal amount you entered is too large compared to your balance. Your limit Rp${formatRupiah(limit)}`,
-      );
-    } else {
-      setError("");
-    }
+  const handleTypeChange = (newType) => {
+    setType(newType);
+    setNominal("");
   };
 
   const displayNominal = nominal ? formatRupiah(Number(nominal)) : "";
 
-  const handleSubmit = () => {
-    const amountVal = Number(nominal);
-    if (!amountVal) return;
-    if (amountVal > limit && type === "income") {
-      setError(
-        `The nominal amount you entered is too large compared to your balance. Your limit Rp${formatRupiah(limit)}`,
-      );
-      return;
-    }
+  const amountVal = Number(nominal);
+  const activeLimit = type === "income" ? limit : collected;
+  const isError = amountVal > activeLimit;
 
-    const finalAmount = type === "expense" ? -amountVal : amountVal;
+  let errorMessage = "";
+  if (isError) {
+    if (type === "income") {
+      errorMessage = `The nominal amount you entered is too large compared to your balance. Your limit Rp${formatRupiah(limit)}`;
+    } else {
+      errorMessage = `The nominal amount you entered is too large compared to your collected funds. Your limit Rp${formatRupiah(collected)}`;
+    }
+  }
+
+  const handleSubmit = () => {
+    if (!amountVal || isError) return;
 
     onSave({
-      amount: finalAmount,
+      amount: amountVal,
       note,
+      type,
     });
   };
 
@@ -89,7 +88,7 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit }) {
           <div className="p-6 flex flex-col gap-6">
             <div className="inline-flex items-center p-1 bg-white border border-gray-200 rounded-full w-[240px]">
               <button
-                onClick={() => setType("income")}
+                onClick={() => handleTypeChange("income")}
                 className={`flex-1 flex items-center justify-center cursor-pointer gap-2 py-2 text-sm font-medium rounded-full transition-colors ${
                   type === "income"
                     ? "bg-[#0f172a] text-white"
@@ -99,7 +98,7 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit }) {
                 <FiPlus size={16} /> Income
               </button>
               <button
-                onClick={() => setType("expense")}
+                onClick={() => handleTypeChange("expense")}
                 className={`flex-1 flex items-center justify-center cursor-pointer gap-2 py-2 text-sm font-medium rounded-full transition-colors ${
                   type === "expense"
                     ? "bg-[#0f172a] text-white"
@@ -135,20 +134,20 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit }) {
                   onChange={handleNominalChange}
                   placeholder="0"
                   className={`w-full pl-12 pr-4 py-3 border rounded-xl outline-none transition-all text-gray-900 ${
-                    error
+                    isError
                       ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/20"
                       : "border-gray-200 focus:border-gray-400 focus:ring-1 focus:ring-gray-400/20"
                   }`}
                 />
               </div>
 
-              {error ? (
-                <p className="text-xs text-red-500 font-medium">{error}</p>
+              {isError ? (
+                <p className="text-xs text-red-500 font-medium">{errorMessage}</p>
               ) : (
                 <p className="text-xs text-gray-500 font-medium">
-                  savings top-up limit{" "}
+                  {type === "income" ? "savings top-up limit" : "expense limit"}{" "}
                   <span className="font-bold text-gray-600">
-                    Rp{formatRupiah(limit)}
+                    Rp{formatRupiah(activeLimit)}
                   </span>
                 </p>
               )}
@@ -164,7 +163,7 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit }) {
             </button>
             <button
               onClick={handleSubmit}
-              disabled={!nominal || (!!error && type === "income")}
+              disabled={!nominal || isError}
               className="px-6 py-2.5 text-sm font-medium text-white bg-[#0f172a] rounded-lg hover:bg-[#1e293b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               Save

@@ -6,7 +6,7 @@ export const register = (data) => api.post("/register", data);
 export const logout = () => api.post("/logout");
 
 // Goals
-export const getGoals = () => api.get("/goals");
+export const getGoals = (params) => api.get("/goals", { params });
 export const getGoalById = (id) => api.get(`/goals/${id}`);
 export const createGoal = (data) => api.post("/goals", data);
 export const updateGoal = (id, data) => api.put(`/goals/${id}`, data);
