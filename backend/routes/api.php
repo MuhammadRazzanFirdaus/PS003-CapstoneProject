@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BillController;
 use App\Http\Controllers\Api\NotificationController;
+use \App\Http\Middleware\GoalMiddleware;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
@@ -22,7 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     //gols
-    Route::apiResource('goals', GoalController::class)->middleware(\App\Http\Middleware\GoalMiddleware::class);
+    Route::apiResource('goals', GoalController::class)->middleware(GoalMiddleware::class);
 
     // goals saving
     Route::get('goals/{goal}/savings', [GoalSavingController::class, 'index']);
