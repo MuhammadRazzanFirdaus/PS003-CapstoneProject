@@ -20,7 +20,7 @@ class Goal extends Model
         'status'
     ];
 
-    protected $appends = ['current_savings', 'current_status', 'days_passed'];
+    protected $appends = ['current_savings', 'current_status', 'days_passed', 'image_url'];
 
     public function savings()
     {
@@ -88,5 +88,13 @@ class Goal extends Model
         }
 
         return $this;
+    }
+
+    /**
+     * Get full image URL
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? asset('storage/' . $this->image) : null;
     }
 }
