@@ -20,9 +20,9 @@ export default function GoalCard({
   saving_amount,
   saving_period,
   target_date,
-  savings_sum_amount,
+  current_savings,
 }) {
-  const collected = (Number(initial_amount) || 0) + (Number(savings_sum_amount) || 0);
+  const collected = Number(current_savings) || 0;
   const target = Number(target_amount) || 0;
   const remaining = Math.max(0, target - collected);
   const progress =

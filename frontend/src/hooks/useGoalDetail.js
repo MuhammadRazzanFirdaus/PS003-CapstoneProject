@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getGoals, getSavingsByGoal } from "../api/fingo";
+import { getAuthUserId } from "../utils/auth";
 
 export function useGoalDetail(id) {
   const [goal, setGoal] = useState(null);
@@ -13,7 +14,10 @@ export function useGoalDetail(id) {
     setLoading(true);
     setSavingsLoading(true);
 
-    getGoals()
+    const userId = getAuthUserId();
+    const params = userId ? { user_id: userId } : {};
+
+    getGoals(params)
       .then((res) => {
         const all = Array.isArray(res.data) ? res.data : res.data.data ?? [];
         const found = all.find((g) => String(g.id) === String(id));
