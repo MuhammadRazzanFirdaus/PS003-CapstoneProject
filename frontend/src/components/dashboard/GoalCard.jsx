@@ -8,36 +8,7 @@ const getBarColor = (progress, isNotAchieved, isCompleted) => {
   return "bg-red-500";
 };
 
-function checkNotAchieved(goal) {
-  const initial = Number(goal.initial_amount) || 0;
-  const target = Number(goal.target_amount) || 0;
-  const savingsSum = Number(goal.savings_sum_amount) || 0;
-  const remaining = target - (initial + savingsSum);
 
-  if (remaining <= 0) return false;
-  if (goal.status === "completed") return false;
-  if (goal.status === "not_achieved") return true;
-  if (!goal.target_date || !goal.saving_amount || !goal.saving_period)
-    return false;
-
-  const savingAmount = Number(goal.saving_amount) || 0;
-
-  const days = Math.max(
-    1,
-    Math.ceil(
-      (new Date(goal.target_date) - new Date()) / (1000 * 60 * 60 * 24),
-    ),
-  );
-  const weeks = Math.max(1, Math.ceil(days / 7));
-  const months = Math.max(1, Math.ceil(days / 30));
-
-  let totalSaved = 0;
-  if (goal.saving_period === "daily") totalSaved = savingAmount * days;
-  if (goal.saving_period === "weekly") totalSaved = savingAmount * weeks;
-  if (goal.saving_period === "monthly") totalSaved = savingAmount * months;
-
-  return totalSaved < remaining;
-}
 
 export default function GoalCard({
   id,
@@ -49,23 +20,15 @@ export default function GoalCard({
   saving_amount,
   saving_period,
   target_date,
-  savings_sum_amount,
+  current_savings,
 }) {
-  const collected = (Number(initial_amount) || 0) + (Number(savings_sum_amount) || 0);
+  const collected = Number(current_savings) || 0;
   const target = Number(target_amount) || 0;
   const remaining = Math.max(0, target - collected);
   const progress =
     target > 0 ? Math.min(Math.round((collected / target) * 100), 100) : 0;
-  const isCompleted = collected >= target || status === "completed";
-  const isNotAchieved = !isCompleted && checkNotAchieved({
-    status,
-    target_date,
-    saving_amount,
-    saving_period,
-    initial_amount,
-    target_amount,
-    savings_sum_amount,
-  });
+  const isCompleted = status === "completed";
+  const isNotAchieved = status === "not_achieved";
 
   return (
     <Link to={`/goals/${id}`}>

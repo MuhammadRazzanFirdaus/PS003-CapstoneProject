@@ -1,33 +1,7 @@
 import { motion } from "framer-motion";
 import { MdOutlineWarningAmber } from "react-icons/md";
 
-function isOnTrack(goal, collected) {
-  if (goal.status === "completed") return true;
-  if (!goal.target_date || !goal.saving_amount || !goal.saving_period)
-    return true;
 
-  const target = Number(goal.target_amount) || 0;
-  const savingAmount = Number(goal.saving_amount) || 0;
-  const remaining = target - collected;
-  
-  if (remaining <= 0) return true;
-
-  const days = Math.max(
-    1,
-    Math.ceil(
-      (new Date(goal.target_date) - new Date()) / (1000 * 60 * 60 * 24),
-    ),
-  );
-  const weeks = Math.max(1, Math.ceil(days / 7));
-  const months = Math.max(1, Math.ceil(days / 30));
-
-  let totalSaved = 0;
-  if (goal.saving_period === "daily") totalSaved = savingAmount * days;
-  if (goal.saving_period === "weekly") totalSaved = savingAmount * weeks;
-  if (goal.saving_period === "monthly") totalSaved = savingAmount * months;
-
-  return totalSaved >= remaining;
-}
 
 function StatusBadge({ status, isNotAchieved, isCompleted }) {
   if (isCompleted) {
@@ -51,16 +25,14 @@ function StatusBadge({ status, isNotAchieved, isCompleted }) {
 export default function GoalDetailStats({ goal, savings = [], fadeUp }) {
   const initial = Number(goal.initial_amount) || 0;
   const target = Number(goal.target_amount) || 0;
-  const totalSavings = savings.reduce(
-    (acc, s) => acc + (Number(s.amount) || 0),
-    0,
-  );
+  const totalSavings = savings.reduce((acc, s) => {
+    const amount = Number(s.amount) || 0;
+    return s.type === "expense" ? acc - amount : acc + amount;
+  }, 0);
   const collected = initial + totalSavings;
   const remaining = Math.max(0, target - collected);
-  const isCompleted = collected >= target || goal.status === "completed";
-  
-  const onTrack = isCompleted || isOnTrack(goal, collected);
-  const isNotAchieved = !isCompleted && (!onTrack || goal.status === "not_achieved");
+  const isCompleted = goal.status === "completed";
+  const isNotAchieved = goal.status === "not_achieved";
 
   return (
     <div className="flex flex-col gap-3">

@@ -9,10 +9,10 @@ export default function GoalSavingItem({ saving, index }) {
       className="bg-white rounded-xl px-4 py-3 flex items-center justify-between"
     >
       <div>
-        <p className="text-sm font-medium">{saving.note ?? "-"}</p>
+        <p className="text-sm font-medium">{saving.note ?? "Saving"}</p>
         <p className="text-xs text-gray-400">
-          {saving.date
-            ? new Date(saving.date).toLocaleDateString("id-ID", {
+          {saving.created_at
+            ? new Date(saving.created_at).toLocaleDateString("id-ID", {
                 day: "numeric",
                 month: "short",
                 year: "numeric",
@@ -20,8 +20,8 @@ export default function GoalSavingItem({ saving, index }) {
             : "-"}
         </p>
       </div>
-      <p className="text-sm font-semibold text-teal-600">
-        +Rp{Number(saving.amount).toLocaleString("id-ID")}
+      <p className={`text-sm font-semibold ${saving.type === "expense" ? "text-red-500" : "text-teal-600"}`}>
+        {saving.type === "expense" ? "-" : "+"}Rp{Math.abs(Number(saving.amount)).toLocaleString("id-ID")}
       </p>
     </motion.div>
   );
