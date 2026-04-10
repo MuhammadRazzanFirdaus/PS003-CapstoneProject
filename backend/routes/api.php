@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     //gols
-    Route::apiResource('goals', GoalController::class);
+    Route::apiResource('goals', GoalController::class)->middleware(\App\Http\Middleware\GoalMiddleware::class);
 
     // goals saving
     Route::get('goals/{goal}/savings', [GoalSavingController::class, 'index']);

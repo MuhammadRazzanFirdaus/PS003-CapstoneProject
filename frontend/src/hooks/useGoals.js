@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getGoals } from "../api/fingo";
+import { getAuthUserId } from "../utils/auth";
 
 export function useGoals() {
   const [goals, setGoals] = useState([]);
@@ -7,7 +8,10 @@ export function useGoals() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    getGoals()
+    const userId = getAuthUserId();
+    const params = userId ? { user_id: userId } : {};
+
+    getGoals(params)
       .then((res) => {
         const data = Array.isArray(res.data) ? res.data : res.data.data ?? [];
         setGoals(data);

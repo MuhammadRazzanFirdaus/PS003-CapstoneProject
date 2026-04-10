@@ -25,10 +25,10 @@ function StatusBadge({ status, isNotAchieved, isCompleted }) {
 export default function GoalDetailStats({ goal, savings = [], fadeUp }) {
   const initial = Number(goal.initial_amount) || 0;
   const target = Number(goal.target_amount) || 0;
-  const totalSavings = savings.reduce(
-    (acc, s) => acc + (Number(s.amount) || 0),
-    0,
-  );
+  const totalSavings = savings.reduce((acc, s) => {
+    const amount = Number(s.amount) || 0;
+    return s.type === "expense" ? acc - amount : acc + amount;
+  }, 0);
   const collected = initial + totalSavings;
   const remaining = Math.max(0, target - collected);
   const isCompleted = goal.status === "completed";
