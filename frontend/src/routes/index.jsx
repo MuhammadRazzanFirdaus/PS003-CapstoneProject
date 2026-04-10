@@ -7,6 +7,7 @@ import Bills from "../pages/Bills";
 import Notifications from "../pages/Notifications";
 import GoalDetail from "../pages/goal-page/GoalDetail";
 import GoalCreate from "../pages/goal-page/GoalCreate";
+import GoalEdit from "../pages/goal-page/GoalEdit";
 import { isAuthenticated } from "../utils/auth";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
       {
         path: "/goals/:id",
         element: <GoalDetail />,
+      },
+      {
+        path: "/goals/:id/edit",
+        element: <GoalEdit />,
       },
       {
         path: "/transactions",

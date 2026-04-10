@@ -32,9 +32,9 @@ class Goal extends Model
      */
     public function getCurrentSavingsAttribute()
     {
-        // Use pre-aggregated sum if available (optimized for index)
-        $sum = $this->savings_sum_amount ?? $this->savings()->sum('amount');
-        return (float)($this->initial_amount ?? 0) + (float)$sum;
+        $incomes = $this->savings()->where('type', 'income')->sum('amount');
+        $expenses = $this->savings()->where('type', 'expense')->sum('amount');
+        return (float)($this->initial_amount ?? 0) + (float)$incomes - (float)$expenses;
     }
 
     /**
