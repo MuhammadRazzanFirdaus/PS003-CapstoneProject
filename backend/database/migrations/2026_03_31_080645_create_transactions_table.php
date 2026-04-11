@@ -18,7 +18,6 @@ return new class extends Migration
             $table->decimal('amount', 15, 2);
             $table->enum('type', ['income', 'expense']);
             $table->string('category');
-            $table->date('date');
             $table->text('description')->nullable();
             $table->foreignId('goal_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
