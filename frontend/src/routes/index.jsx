@@ -6,6 +6,7 @@ import Transactions from "../pages/Transactions";
 import Bills from "../pages/Bills";
 import Notifications from "../pages/Notifications";
 import GoalDetail from "../pages/goal-page/GoalDetail";
+import GoalSavingsList from "../pages/goal-page/GoalSavingsList";
 import GoalCreate from "../pages/goal-page/GoalCreate";
 import GoalEdit from "../pages/goal-page/GoalEdit";
 import { isAuthenticated } from "../utils/auth";
@@ -19,11 +20,11 @@ function ProtectedLayout() {
 export const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login />
+    element: <Login />,
   },
   {
     path: "/register",
-    element: <Register />
+    element: <Register />,
   },
   {
     path: "/",
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
       {
         path: "/goals/:id",
         element: <GoalDetail />,
+      },
+      {
+        path: "/goals/:id/savings",
+        element: <GoalSavingsList />,
       },
       {
         path: "/goals/:id/edit",

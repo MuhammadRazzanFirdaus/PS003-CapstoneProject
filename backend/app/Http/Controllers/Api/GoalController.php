@@ -50,10 +50,6 @@ class GoalController extends Controller
 
             $goal->syncStatus();
 
-            if ($goal->image) {
-                $goal->image_url = asset('storage/' . $goal->image);
-            }
-
             return response()->json([
                 'success' => true,
                 'message' => 'Goal berhasil dibuat!',
@@ -69,15 +65,65 @@ class GoalController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        try {
+            $goal = Goal::with('savings')->findOrFail($id);
+            $goal->syncStatus();
+
+            return response()->json([
+                'success' => true,
+                'data' => $goal
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Goal tidak ditemukan.'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil data goal.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function update(Request $request, $id)
     {
-        $goal = Goal::findOrFail($id);
+        try {
+            $goal = Goal::findOrFail($id);
 
-        $goal->update($request->all());
+            $data = $request->all();
 
-        $goal->syncStatus();
+            if ($request->hasFile('image')) {
+                if ($goal->image) {
+                    Storage::disk('public')->delete($goal->image);
+                }
+                $path = $request->file('image')->store('goals', 'public');
+                $data['image'] = $path;
+            }
 
-        return response()->json(['success' => true, 'data' => $goal]);
+            $goal->update($data);
+            $goal->syncStatus();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Goal berhasil diperbarui!',
+                'data' => $goal
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Goal tidak ditemukan.'
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memperbarui.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy($id)
