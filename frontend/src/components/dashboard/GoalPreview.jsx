@@ -92,7 +92,7 @@ export default function GoalPreview() {
       {error && <p className="text-sm text-red-400">Gagal memuat goals.</p>}
 
       {!loading && !error && goals.length === 0 && (
-        <p className="text-sm text-gray-400">Belum ada goals.</p>
+        <p className="text-sm text-gray-400 text-center py-8">Belum ada goals yang dibuat.</p>
       )}
 
       <AnimatePresence>

@@ -5,7 +5,7 @@ import SummaryCard from "./components/dashboard/SummaryCard";
 import GoalPreview from "./components/dashboard/GoalPreview";
 import TransactionPreview from "./components/dashboard/TransactionPreview";
 import WelcomeBanner from "./components/dashboard/WelcomeBanner";
-import { MOCK_TRANSACTIONS } from "./utils/mockData";
+import { useTransactions } from "./hooks/useTransactions";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -17,28 +17,38 @@ const fadeUp = {
 };
 
 export default function App() {
+  const { transactions } = useTransactions();
+
   const { totalSaved, incomeThisMonth, expenseThisMonth } = useMemo(() => {
     const now = new Date();
     let total = 0;
     let income = 0;
     let expense = 0;
 
-    MOCK_TRANSACTIONS.forEach((tx) => {
-      total += tx.amount;
+    transactions.forEach((tx) => {
+      const amount = Number(tx.amount) || 0;
+      const isIncome = tx.type === "income";
+      
+      // We will sum the "total" balance: income adds, expense subtracts
+      if (isIncome) {
+        total += amount;
+      } else {
+        total -= amount;
+      }
 
-      const txDate = new Date(tx.timestamp);
+      const txDate = new Date(tx.date || tx.created_at);
       const isThisMonth =
         txDate.getMonth() === now.getMonth() &&
         txDate.getFullYear() === now.getFullYear();
 
       if (isThisMonth) {
-        if (tx.amount > 0) income += tx.amount;
-        if (tx.amount < 0) expense += Math.abs(tx.amount);
+        if (isIncome) income += amount;
+        else expense += amount;
       }
     });
 
     return { totalSaved: total, incomeThisMonth: income, expenseThisMonth: expense };
-  }, []);
+  }, [transactions]);
 
   const formatIDR = (num) => `Rp${num.toLocaleString("id-ID")}`;
 
