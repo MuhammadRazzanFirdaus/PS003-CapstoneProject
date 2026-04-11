@@ -4,6 +4,7 @@ import { MdOutlineWarningAmber } from "react-icons/md";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { deleteGoal } from "../../api/fingo";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "react-toastify";
 
 const getBarColor = (progress, isNotAchieved, isCompleted) => {
   if (isCompleted || progress >= 100) return "bg-green-500";
@@ -11,8 +12,6 @@ const getBarColor = (progress, isNotAchieved, isCompleted) => {
   if (progress >= 50) return "bg-yellow-500";
   return "bg-red-500";
 };
-
-
 
 export default function GoalCard({
   id,
@@ -29,6 +28,7 @@ export default function GoalCard({
 }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
   const navigate = useNavigate();
   const collected = Number(current_savings) || 0;
   const target = Number(target_amount) || 0;
@@ -56,10 +56,12 @@ export default function GoalCard({
     try {
       setIsDeleting(true);
       await deleteGoal(id);
-      window.location.reload();
+      setIsDeleteModalOpen(false);
+      setIsDeleted(true);
+      toast.success("Goal berhasil dihapus!");
     } catch (err) {
       console.error(err);
-      alert("Gagal menghapus goal.");
+      toast.error("Gagal menghapus goal.");
       setIsDeleting(false);
       setIsDeleteModalOpen(false);
     }
@@ -71,12 +73,13 @@ export default function GoalCard({
     setIsDeleteModalOpen(false);
   };
 
+  if (isDeleted) return null;
+
   return (
     <>
       <Link to={`/goals/${id}`} className="block">
         <div className="group relative border border-[#E5E7EB] rounded-xl p-4 bg-white flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer overflow-hidden">
           
-          {/* Hover actions */}
           <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
             <button
               onClick={handleEditClick}
@@ -94,17 +97,17 @@ export default function GoalCard({
 
           <div className="flex items-center gap-3">
             {image_url ? (
-              <img 
-                src={image_url} 
-                alt={name} 
-                className="w-10 h-10 rounded-lg object-cover shrink-0" 
+              <img
+                src={image_url}
+                alt={name}
+                className="w-10 h-10 rounded-lg object-cover shrink-0 shadow-sm border border-gray-100"
               />
             ) : (
               <div className="w-10 h-10 rounded-lg bg-gray-200 shrink-0" />
             )}
-            <div>
-              <p className="text-[16px] font-bold pr-16 truncate max-w-[200px]">{name}</p>
-              <p className="text-sm text-gray-400">{category}</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-[16px] font-bold pr-16 truncate">{name}</p>
+              <p className="text-sm text-gray-400 truncate">{category}</p>
             </div>
           </div>
 
