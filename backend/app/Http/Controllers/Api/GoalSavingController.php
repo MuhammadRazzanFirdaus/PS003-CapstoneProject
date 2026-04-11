@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Goal;
 use App\Models\GoalSaving;
+use App\Models\Transaction;
 use App\Http\Requests\StoreGoalSavingRequest;
 use Illuminate\Http\Request;
 
@@ -39,6 +40,16 @@ class GoalSavingController extends Controller
             $saving = $goal->savings()->create($validated);
 
             $goal->syncStatus();
+
+            Transaction::create([
+                'user_id' => auth()->id(),
+                'name' => 'Tabungan ' . $goal->name,
+                'amount' => $validated['amount'],
+                'type' => $validated['type'],
+                'category' => 'Savings',
+                'description' => $validated['note'] ?? 'Otomatis masuk dari tabungan',
+                'goal_id' => $goal->id
+            ]);
 
             return response()->json([
                 'success' => true,
