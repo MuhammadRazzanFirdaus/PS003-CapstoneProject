@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Goal;
 use App\Models\GoalSaving;
+use App\Models\Transaction;
 use App\Http\Requests\StoreGoalSavingRequest;
 use Illuminate\Http\Request;
 
@@ -31,7 +32,6 @@ class GoalSavingController extends Controller
     public function store(StoreGoalSavingRequest $request, $goalId)
     {
         try {
-
             $validated = $request->validated();
 
             $goal = Goal::findOrFail($goalId);
@@ -39,6 +39,15 @@ class GoalSavingController extends Controller
             $saving = $goal->savings()->create($validated);
 
             $goal->syncStatus();
+
+            Transaction::create([
+                'user_id' => $goal->user_id,
+                'name' => 'Goal: ' . $goal->name,
+                'amount' => $validated['amount'],
+                'type' => $validated['type'] === 'income' ? 'expense' : 'income',
+                'category' => 'Goal',
+                'description' => 'Uang yang ditabung untuk goal: ' . $goal->name . ' (Ref: #' . $saving->id . ')',
+            ]);
 
             return response()->json([
                 'success' => true,
@@ -90,10 +99,12 @@ class GoalSavingController extends Controller
     {
         try {
             $saving = GoalSaving::findOrFail($id);
-            $goal = $saving->goal;
+            $goal   = $saving->goal;
             $saving->delete();
 
             $goal->syncStatus();
+
+            Transaction::where('description', 'like', '%(Ref: #' . $id . ')')->delete();
 
             return response()->json(['success' => true, 'message' => 'Saving deleted.'], 200);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
