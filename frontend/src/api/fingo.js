@@ -9,7 +9,13 @@ export const logout = () => api.post("/logout");
 export const getGoals = (params) => api.get("/goals", { params });
 export const getGoalById = (id) => api.get(`/goals/${id}`);
 export const createGoal = (data) => api.post("/goals", data);
-export const updateGoal = (id, data) => api.put(`/goals/${id}`, data);
+export const updateGoal = (id, data) => {
+  if (data instanceof FormData) {
+    data.append("_method", "PUT");
+    return api.post(`/goals/${id}`, data);
+  }
+  return api.put(`/goals/${id}`, data);
+};
 export const deleteGoal = (id) => api.delete(`/goals/${id}`);
 
 export const getCurrentUser = () => api.get("/user");

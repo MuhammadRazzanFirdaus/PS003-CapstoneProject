@@ -1,0 +1,61 @@
+const today = new Date();
+const yesterday = new Date(today);
+yesterday.setDate(yesterday.getDate() - 1);
+
+export const MOCK_TRANSACTIONS = [
+  {
+    id: 1,
+    title: "Lv Imagination",
+    category: "Goals",
+    date: "Today",
+    time: "09:41 AM",
+    type: "Expense",
+    amount: -310000,
+    iconType: "target",
+    timestamp: new Date(today.setHours(9, 41, 0, 0)).toISOString(),
+  },
+  {
+    id: 2,
+    title: "Eid Al-Fitr",
+    category: "Salary",
+    date: "Yesterday",
+    time: "08:00 AM",
+    type: "Income",
+    amount: 2350000,
+    iconType: "envelope",
+    timestamp: new Date(yesterday.setHours(8, 0, 0, 0)).toISOString(),
+  },
+  {
+    id: 3,
+    title: "New Mac",
+    category: "Goals",
+    date: "Mar 26, 2026",
+    time: "09:41 AM",
+    type: "Expense",
+    amount: -207000,
+    iconType: "target",
+    timestamp: "2026-03-26T09:41:00Z",
+  },
+  {
+    id: 4,
+    title: "Monthly Salary",
+    category: "Salary",
+    date: "Mar 26, 2026",
+    time: "08:00 AM",
+    type: "Income",
+    amount: 12500000,
+    iconType: "briefcase",
+    timestamp: "2026-03-26T08:00:00Z",
+  },
+  {
+    id: 5,
+    title: "Monthly Salary",
+    category: "Salary",
+    date: "Mar 01, 2026",
+    time: "08:00 AM",
+    type: "Income",
+    amount: 12500000,
+    iconType: "briefcase",
+    timestamp: "2026-03-01T08:00:00Z",
+  },
+];
