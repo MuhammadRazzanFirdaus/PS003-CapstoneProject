@@ -28,3 +28,16 @@ export const getSaving = (savingId) => api.get(`/savings/${savingId}`);
 export const updateSaving = (savingId, data) =>
   api.put(`/savings/${savingId}`, data);
 export const deleteSaving = (savingId) => api.delete(`/savings/${savingId}`);
+
+// Transactions
+export const getTransactions = (params) => api.get("/transactions", { params });
+export const createTransaction = (data) => api.post("/transactions", data);
+export const updateTransaction = (id, data) => {
+  if (data instanceof FormData) {
+    data.append("_method", "PUT");
+    return api.post(`/transactions/${id}`, data);
+  }
+  return api.put(`/transactions/${id}`, data);
+};
+export const deleteTransaction = (transactionId) => api.delete(`/transactions/${transactionId}`);
+

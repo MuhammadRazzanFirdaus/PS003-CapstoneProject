@@ -8,9 +8,10 @@ import GoalDetailStats from "../../components/goal-detail/GoalDetailStats";
 import GoalSavingItem from "../../components/goal-detail/GoalSavingItem";
 import GoalSavingModal from "../../components/goal-detail/GoalSavingModal";
 import axiosInstance from "../../api/axios";
-import { MOCK_TRANSACTIONS } from "../../utils/mockData";
+
 import { toast } from "react-toastify";
 import { deleteSaving } from "../../api/fingo";
+import { useTransactions } from "../../hooks/useTransactions";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -67,6 +68,7 @@ export default function GoalDetail() {
   const navigate = useNavigate();
   const { goal, savings, loading, savingsLoading, error, refetch } =
     useGoalDetail(id);
+  const { transactions } = useTransactions();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -128,8 +130,11 @@ export default function GoalDetail() {
     }, 0) || 0;
   const collected = (Number(goal?.initial_amount) || 0) + totalSavings;
 
-  // Menggunakan data mock transactions untuk Total Saved (limit Add Funds)
-  const limit = MOCK_TRANSACTIONS.reduce((acc, tx) => acc + tx.amount, 0);
+  // Total balance from real transactions (limit for Add Funds)
+  const limit = transactions?.reduce((acc, tx) => {
+    const amount = Number(tx.amount) || 0;
+    return tx.type === "income" ? acc + amount : acc - amount;
+  }, 0) || 0;
 
   return (
     <div className="py-10 px-30 flex flex-col gap-6">

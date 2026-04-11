@@ -1,7 +1,29 @@
 import { motion, AnimatePresence } from "framer-motion";
 import TransactionItem from "./TransactionItem";
 
-export default function TransactionList({ fadeUp, transactions }) {
+const TransactionSkeleton = () => (
+  <div className="grid grid-cols-[2fr_1fr_1fr_1.5fr] items-center py-4 border-b border-gray-100 last:border-none animate-pulse">
+    <div className="flex items-center gap-4 px-4">
+      <div className="w-10 h-10 rounded-full bg-gray-200 shrink-0"></div>
+      <div className="flex flex-col gap-2 w-full">
+        <div className="h-4 bg-gray-200 rounded-md w-3/4"></div>
+        <div className="h-3 bg-gray-200 rounded-md w-1/2"></div>
+      </div>
+    </div>
+    <div className="px-4 text-center sm:text-left flex flex-col gap-2">
+      <div className="h-4 bg-gray-200 rounded-md w-full"></div>
+      <div className="h-3 bg-gray-200 rounded-md w-2/3"></div>
+    </div>
+    <div className="px-4 flex justify-start sm:justify-center">
+      <div className="h-6 w-16 bg-gray-200 rounded-md"></div>
+    </div>
+    <div className="px-4 flex items-center justify-end gap-3 text-right">
+      <div className="h-5 w-24 bg-gray-200 rounded-md"></div>
+    </div>
+  </div>
+);
+
+export default function TransactionList({ fadeUp, transactions, loading, onDelete, onEdit }) {
   return (
     <motion.div
       custom={2}
@@ -19,7 +41,19 @@ export default function TransactionList({ fadeUp, transactions }) {
 
       <div className="flex flex-col min-h-[200px] relative">
         <AnimatePresence mode="popLayout">
-          {transactions.length > 0 ? (
+          {loading ? (
+            <motion.div
+              key="loading-skeleton"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <TransactionSkeleton />
+              <TransactionSkeleton />
+              <TransactionSkeleton />
+              <TransactionSkeleton />
+            </motion.div>
+          ) : transactions.length > 0 ? (
             transactions.map((transaction) => (
               <motion.div
                 key={transaction.id}
@@ -29,10 +63,11 @@ export default function TransactionList({ fadeUp, transactions }) {
                 exit={{ opacity: 0, y: -10, scale: 0.98 }}
                 transition={{ duration: 0.2 }}
               >
-                <TransactionItem transaction={transaction} />
+                <TransactionItem transaction={transaction} onDelete={onDelete} onEdit={onEdit} />
               </motion.div>
             ))
           ) : (
+
             <motion.div
               key="empty-state"
               initial={{ opacity: 0 }}

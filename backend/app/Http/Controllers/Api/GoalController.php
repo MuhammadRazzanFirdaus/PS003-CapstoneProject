@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Goal;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreGoalRequest;
 use Illuminate\Support\Facades\Storage;
@@ -135,7 +136,13 @@ class GoalController extends Controller
                 Storage::disk('public')->delete($goal->image);
             }
 
+            $savingIds = $goal->savings()->pluck('id');
+
             $goal->delete();
+
+            foreach ($savingIds as $id) {
+                Transaction::where('description', 'like', '%(Ref: #' . $id . ')')->delete();
+            }
 
             return response()->json([
                 'success' => true,
