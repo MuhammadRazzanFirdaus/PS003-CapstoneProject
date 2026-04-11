@@ -29,9 +29,9 @@ export default function GoalDetailInfo({ goal, fadeUp }) {
       className="flex gap-6 items-start"
     >
       <div className="w-60 h-56 rounded-xl bg-gray-200 overflow-hidden shrink-0">
-        {goal.image ? (
+        {goal.image_url ? (
           <img
-            src={`${import.meta.env.VITE_STORAGE_URL}/${goal.image}`}
+            src={goal.image_url}
             alt={goal.name}
             className="w-full h-full object-cover"
           />
