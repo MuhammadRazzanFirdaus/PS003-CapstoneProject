@@ -9,7 +9,7 @@ export function useGoalDetail(id) {
   const [savingsLoading, setSavingsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const fetchDetail = () => {
     if (!id) return;
     setLoading(true);
     setSavingsLoading(true);
@@ -34,8 +34,11 @@ export function useGoalDetail(id) {
       })
       .catch(() => setSavings([]))
       .finally(() => setSavingsLoading(false));
+  };
 
+  useEffect(() => {
+    fetchDetail();
   }, [id]);
 
-  return { goal, savings, loading, savingsLoading, error, setSavings };
+  return { goal, savings, loading, savingsLoading, error, setSavings, refetch: fetchDetail };
 }

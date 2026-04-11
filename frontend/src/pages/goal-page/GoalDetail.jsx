@@ -8,6 +8,9 @@ import GoalDetailStats from "../../components/goal-detail/GoalDetailStats";
 import GoalSavingItem from "../../components/goal-detail/GoalSavingItem";
 import GoalSavingModal from "../../components/goal-detail/GoalSavingModal";
 import axiosInstance from "../../api/axios";
+import { MOCK_TRANSACTIONS } from "../../utils/mockData";
+import { toast } from "react-toastify";
+import { deleteSaving } from "../../api/fingo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -62,7 +65,8 @@ function SavingSkeleton({ index }) {
 export default function GoalDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { goal, savings, loading, savingsLoading, error } = useGoalDetail(id);
+  const { goal, savings, loading, savingsLoading, error, refetch } =
+    useGoalDetail(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -70,13 +74,25 @@ export default function GoalDetail() {
     try {
       setIsSubmitting(true);
       await axiosInstance.post(`/goals/${id}/savings`, data);
+      await refetch();
       setIsModalOpen(false);
-      window.location.reload(); // Refresh fully to update goal & savings
+      toast.success("Catatan dana berhasil ditambahkan!");
     } catch (err) {
       console.error(err);
-      alert("Gagal menambahkan dana tabungan.");
+      toast.error("Gagal menambahkan dana tabungan.");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteSaving = async (savingId) => {
+    try {
+      await deleteSaving(savingId);
+      await refetch();
+      toast.success("List dihapus!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Gagal menghapus tabungan.");
     }
   };
 
@@ -111,9 +127,9 @@ export default function GoalDetail() {
       return s.type === "expense" ? acc - amount : acc + amount;
     }, 0) || 0;
   const collected = (Number(goal?.initial_amount) || 0) + totalSavings;
-  
-  // Menggunakan data static untuk "Total Saved / Wallet Balance" sementara
-  const limit = 15340404;
+
+  // Menggunakan data mock transactions untuk Total Saved (limit Add Funds)
+  const limit = MOCK_TRANSACTIONS.reduce((acc, tx) => acc + tx.amount, 0);
 
   return (
     <div className="py-10 px-30 flex flex-col gap-6">
@@ -126,7 +142,7 @@ export default function GoalDetail() {
       />
 
       <GoalDetailHeader
-        onBack={() => navigate(-1)}
+        onBack={() => navigate("/goals")}
         onAddFunds={() => setIsModalOpen(true)}
         fadeUp={fadeUp}
       />
@@ -147,7 +163,10 @@ export default function GoalDetail() {
       <motion.div custom={4} variants={fadeUp} initial="hidden" animate="show">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-bold">Goal Savings</h2>
-          <button className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer">
+          <button 
+            onClick={() => navigate(`/goals/${id}/savings`)}
+            className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer"
+          >
             View All →
           </button>
         </div>
@@ -175,7 +194,7 @@ export default function GoalDetail() {
               savings
                 .slice(0, 3)
                 .map((saving, i) => (
-                  <GoalSavingItem key={saving.id} saving={saving} index={i} />
+                  <GoalSavingItem key={saving.id} saving={saving} index={i} onDelete={handleDeleteSaving} />
                 ))}
           </AnimatePresence>
         </div>
