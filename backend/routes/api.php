@@ -43,6 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('bills', [BillController::class, 'index']);
     Route::post('bills', [BillController::class, 'store']);
     Route::patch('bills/{id}/status', [BillController::class, 'updateStatus']);
+    Route::delete('bills/{id}', [BillController::class, 'destroy']);
+
 
     // NOTIFICATIONS 
     Route::get('notifications', [NotificationController::class, 'index']);

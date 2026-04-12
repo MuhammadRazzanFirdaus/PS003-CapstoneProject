@@ -16,7 +16,7 @@ class StoreBillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'nullable|exists:users,id',
             'name' => 'required|string|max:255',
             'amount' => 'required|numeric',
             'due_date' => 'required|date',
