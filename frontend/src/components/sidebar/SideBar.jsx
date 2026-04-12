@@ -78,13 +78,11 @@ export default function SideBar() {
         </motion.button>
       </div>
 
-
       <nav className="flex-1 py-4 flex flex-col gap-1 px-2">
         {navItems.map((item) => (
           <NavItem key={item.label} {...item} badge={item.isNotify ? unreadCount : 0} />
         ))}
       </nav>
-
 
       <div className="border-t border-gray-700 px-2 py-3 shrink-0">
         {user && (
@@ -151,4 +149,4 @@ export default function SideBar() {
       </div>
     </motion.aside>
   );
-}
+}
