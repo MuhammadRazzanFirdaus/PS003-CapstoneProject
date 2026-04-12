@@ -6,7 +6,7 @@ import GoalPreview from "./components/dashboard/GoalPreview";
 import TransactionPreview from "./components/dashboard/TransactionPreview";
 import WelcomeBanner from "./components/dashboard/WelcomeBanner";
 import { useTransactions } from "./hooks/useTransactions";
-import { getCurrentUser } from "./api/fingo";
+import { useAuth } from "./context/AuthContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -18,6 +18,7 @@ const fadeUp = {
 };
 
 export default function App() {
+  const { user } = useAuth();
   const { transactions } = useTransactions();
   const [user, setUser] = useState(null);
 
@@ -90,7 +91,7 @@ export default function App() {
         </div>
 
         <div className="px-2 border-[#E5E7EB] rounded-xl flex items-center justify-center w-full max-w-35 bg-white shadow-sm hover:shadow transition-shadow">
-          <StreakCard streak={12} />
+          <StreakCard streak={user?.current_streak || 0} />
         </div>
       </motion.div>
 
