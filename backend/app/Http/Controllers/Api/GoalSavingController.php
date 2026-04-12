@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Goal;
 use App\Models\GoalSaving;
 use App\Models\Transaction;
+use App\Models\Notification;
 use App\Http\Requests\StoreGoalSavingRequest;
 use Illuminate\Http\Request;
 
@@ -36,9 +37,39 @@ class GoalSavingController extends Controller
 
             $goal = Goal::findOrFail($goalId);
 
+            if ($validated['type'] === 'income') {
+                $remaining = (float)$goal->target_amount - (float)$goal->current_savings;
+                if ((float)$validated['amount'] > $remaining) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Tabungan melebihi sisa target goal. Sisa yang dibutuhkan: Rp' . number_format($remaining, 0, ',', '.')
+                    ], 422);
+                }
+            }
+
             $saving = $goal->savings()->create($validated);
 
+            $oldStatus = $goal->status;
             $goal->syncStatus();
+            $newStatus = $goal->status;
+
+            Notification::create([
+                'user_id' => $goal->user_id,
+                'title' => 'Tabungan Berhasil',
+                'message' => 'Tabungan sebesar Rp' . number_format($validated['amount'], 0, ',', '.') . ' berhasil ditambahkan ke goal ' . $goal->name,
+                'type' => 'success',
+                'goal_id' => $goal->id,
+            ]);
+
+            if ($oldStatus !== 'completed' && $newStatus === 'completed') {
+                Notification::create([
+                    'user_id' => $goal->user_id,
+                    'title' => 'Goal Tercapai!',
+                    'message' => 'Selamat! Target tabungan untuk goal ' . $goal->name . ' telah tercapai 100%.',
+                    'type' => 'completed',
+                    'goal_id' => $goal->id,
+                ]);
+            }
 
             auth()->user()->recordActivity();
 
