@@ -8,6 +8,7 @@ import BillModal from "../components/bills/BillModal";
 import { useBills } from "../hooks/useBills";
 import { createBill, updateBill, deleteBill, updateBillStatus } from "../api/fingo";
 import { getAuthUserId } from "../utils/auth";
+import { useAuth } from "../context/AuthContext";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -20,6 +21,7 @@ const fadeUp = {
 
 export default function Bills() {
   const { bills, loading, refetch } = useBills();
+  const { refreshUser } = useAuth();
   const [activeTab, setActiveTab] = useState("All Bills");
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState("Due Date");
@@ -83,6 +85,7 @@ export default function Bills() {
     try {
       await updateBillStatus(bill.id, true);
       await refetch();
+      await refreshUser();
       toast.success(`"${bill.name}" ditandai sebagai Paid!`);
     } catch (err) {
       console.error(err);
