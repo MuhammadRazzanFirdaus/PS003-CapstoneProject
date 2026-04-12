@@ -33,7 +33,7 @@ export default function TransactionFilters({
   }, []);
 
   const monthOptions = ["All Time", "This Month"];
-  const categoryOptions = ["All Categories", "Salary", "Goal", "Transportasi", "Food & Beverage", "Lainnya"];
+  const categoryOptions = ["All Categories", "Salary", "Goal", "Bill", "Transportasi", "Food & Beverage", "Lainnya"];
   const sortOptions = ["Newest", "Oldest"];
 
   const Dropdown = ({
