@@ -41,3 +41,18 @@ export const updateTransaction = (id, data) => {
 };
 export const deleteTransaction = (transactionId) => api.delete(`/transactions/${transactionId}`);
 
+// Bills
+export const getBills = (params) => api.get("/bills", { params });
+export const createBill = (data) => api.post("/bills", data);
+export const updateBill = (id, data) => {
+  if (data instanceof FormData) {
+    data.append("_method", "PUT");
+    return api.post(`/bills/${id}`, data);
+  }
+  return api.put(`/bills/${id}`, data);
+};
+export const deleteBill = (id) => api.delete(`/bills/${id}`);
+export const updateBillStatus = (id, isPaid) =>
+  api.patch(`/bills/${id}/status`, { is_paid: isPaid ? 1 : 0 });
+
+
