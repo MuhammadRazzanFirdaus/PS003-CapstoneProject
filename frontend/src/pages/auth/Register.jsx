@@ -2,12 +2,16 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { register } from "../../api/fingo";
 import { setAuthToken, setAuthUserId } from "../../utils/auth";
+import AuthLayout from "../../components/auth/AuthLayout";
+import { FiMail, FiLock, FiEye, FiEyeOff, FiUser } from "react-icons/fi";
 
 export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -43,78 +47,119 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
-        <h2 className="text-center text-3xl font-bold">Sign Up</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
+    <AuthLayout
+      title="Create Account"
+      subtitle="Daftar ke Fingo untuk memantau target tabungan, progres, dan semua rencana keuanganmu dalam satu tempat yang rapi."
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="name" className="block text-xs font-semibold text-gray-700 mb-1.5 ml-1">
+            Full Name
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+              <FiUser className="w-4 h-4" />
+            </div>
             <input
               id="name"
               type="text"
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter your full name"
+              className="block w-full pl-10 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900"
             />
           </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
+        </div>
+
+        <div>
+          <label htmlFor="email" className="block text-xs font-semibold text-gray-700 mb-1.5 ml-1">
+            Email Address
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+              <FiMail className="w-4 h-4" />
+            </div>
             <input
               id="email"
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter your email address"
+              className="block w-full pl-10 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900"
             />
           </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
+        </div>
+
+        <div>
+          <label htmlFor="password" className="block text-xs font-semibold text-gray-700 mb-1.5 ml-1">
+            Password
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+              <FiLock className="w-4 h-4" />
+            </div>
             <input
               id="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Create a password"
+              className="block w-full pl-10 pr-10 py-2.5 bg-white border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900"
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              {showPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
+            </button>
           </div>
-          <div>
-            <label htmlFor="passwordConfirmation" className="block text-sm font-medium text-gray-700">
-              Confirm Password
-            </label>
+        </div>
+
+        <div>
+          <label htmlFor="passwordConfirmation" className="block text-xs font-semibold text-gray-700 mb-1.5 ml-1">
+            Confirm Password
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+              <FiLock className="w-4 h-4" />
+            </div>
             <input
               id="passwordConfirmation"
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               required
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Confirm your password"
+              className="block w-full pl-10 pr-10 py-2.5 bg-white border border-gray-200 rounded-xl text-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-gray-900"
             />
+             <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              {showConfirmPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
+            </button>
           </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-          >
-            {loading ? "Signing Up..." : "Sign Up"}
-          </button>
-        </form>
-        <p className="text-sm text-center text-gray-600">
-          Already have an account?{' '}
-          <Link to="/login" className="text-indigo-600 hover:text-indigo-700">
-            Sign in
-          </Link>
-        </p>
-      </div>
-    </div>
+        </div>
+
+        {error && (
+          <div className="p-3 rounded-lg bg-red-50 border border-red-100 text-red-600 text-xs font-medium">
+            {error}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full flex justify-center items-center py-2.5 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-[#1A2035] hover:bg-[#111524] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1A2035] transition-all disabled:opacity-70 disabled:cursor-not-allowed mt-4"
+        >
+          {loading ? "Signing Up..." : "Sign Up"}
+        </button>
+      </form>
+    </AuthLayout>
   );
 }

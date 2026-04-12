@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiPlus, FiMinus } from "react-icons/fi";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 
-// Utility for formatting Rupiah
 const formatRupiah = (number) => {
   return new Intl.NumberFormat("id-ID", {
     minimumFractionDigits: 0,
@@ -16,7 +15,6 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit, collec
   const [note, setNote] = useState("");
   const [nominal, setNominal] = useState("");
 
-  // Reset state when modal opens
   useEffect(() => {
     if (isOpen) {
       setType("income");
@@ -26,7 +24,6 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit, collec
   }, [isOpen]);
 
   const handleNominalChange = (e) => {
-    // Only allow digits
     const val = e.target.value.replace(/\D/g, "");
     setNominal(val);
   };

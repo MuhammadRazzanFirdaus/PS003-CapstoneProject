@@ -29,7 +29,6 @@ export default function App() {
       const amount = Number(tx.amount) || 0;
       const isIncome = tx.type === "income";
       
-      // We will sum the "total" balance: income adds, expense subtracts
       if (isIncome) {
         total += amount;
       } else {
