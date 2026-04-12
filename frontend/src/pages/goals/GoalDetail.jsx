@@ -9,7 +9,6 @@ import GoalSavingItem from "../../components/goal-detail/GoalSavingItem";
 import GoalSavingModal from "../../components/goal-detail/GoalSavingModal";
 import SavingSkeleton from "../../components/goal-detail/SavingSkeleton";
 import axiosInstance from "../../api/axios";
-
 import { toast } from "react-toastify";
 import { deleteSaving } from "../../api/fingo";
 import { useTransactions } from "../../hooks/useTransactions";
@@ -90,11 +89,14 @@ export default function GoalDetail() {
     }, 0) || 0;
   const collected = (Number(goal?.initial_amount) || 0) + totalSavings;
 
-  const limit =
+  const userBalance =
     transactions?.reduce((acc, tx) => {
       const amount = Number(tx.amount) || 0;
       return tx.type === "income" ? acc + amount : acc - amount;
     }, 0) || 0;
+
+  const remainingGoalTarget = Math.max(0, (Number(goal?.target_amount) || 0) - collected);
+  const limit = Math.min(userBalance, remainingGoalTarget);
 
   return (
     <div className="py-10 px-30 flex flex-col gap-6">

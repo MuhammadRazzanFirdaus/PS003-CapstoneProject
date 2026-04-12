@@ -2,19 +2,16 @@ import { FiAlertTriangle, FiBell, FiCheckCircle, FiFileText } from "react-icons/
 import { TbPigMoney } from "react-icons/tb";
 
 const getIconAndColors = (type, badgeText) => {
-  if (badgeText === "Success" || badgeText === "Completed") {
-    if (badgeText === "Success") {
-      return { icon: <TbPigMoney size={18} />, bg: "bg-blue-50", text: "text-blue-500", badgeBg: "bg-emerald-100/50", badgeTextCol: "text-emerald-600" };
-    }
+  if (type === "success") {
+    return { icon: <TbPigMoney size={18} />, bg: "bg-blue-50", text: "text-blue-500", badgeBg: "bg-emerald-100/50", badgeTextCol: "text-emerald-600" };
+  }
+  if (type === "completed") {
     return { icon: <FiCheckCircle size={18} />, bg: "bg-emerald-50", text: "text-emerald-500", badgeBg: "bg-emerald-100/50", badgeTextCol: "text-emerald-600" };
   }
-  if (badgeText === "Reminder") {
+  if (badgeText === "Reminder" || type === "reminder") {
     return { icon: <FiAlertTriangle size={18} />, bg: "bg-orange-50", text: "text-orange-500", badgeBg: "bg-orange-100/50", badgeTextCol: "text-orange-600" };
   }
-  if (badgeText === "Info") {
-    if (type === "memo") {
-       return { icon: <FiFileText size={18} />, bg: "bg-blue-50", text: "text-blue-500", badgeBg: "bg-blue-100/50", badgeTextCol: "text-blue-600" };
-    }
+  if (badgeText === "Info" || type === "info") {
     return { icon: <FiBell size={18} />, bg: "bg-blue-50", text: "text-blue-500", badgeBg: "bg-blue-100/50", badgeTextCol: "text-blue-600" };
   }
   return { icon: <FiBell size={18} />, bg: "bg-gray-100", text: "text-gray-500", badgeBg: "bg-gray-200", badgeTextCol: "text-gray-700" };
@@ -45,7 +42,7 @@ export default function NotificationItem({ notif, onClick }) {
       className="flex gap-5 px-6 py-6 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors cursor-pointer relative group"
     >
       {!notif.is_read && (
-        <div className="absolute left-1.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+        <div className="absolute left-1.5 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-red-500 rounded-full shadow-[0_0_8px_rgba(239,68,68,0.5)]" />
       )}
       <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${bg} ${text} group-hover:scale-110 transition-transform duration-300`}>
         {icon}

@@ -5,6 +5,8 @@ import NotificationList from "../components/notifications/NotificationList";
 import NotificationDetailModal from "../components/notifications/NotificationDetailModal";
 import { useNotifications } from "../hooks/useNotifications";
 
+import NotificationSkeleton from "../components/notifications/NotificationSkeleton";
+
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
   show: (i) => ({
@@ -22,7 +24,6 @@ export default function Notifications() {
   const [selectedNotif, setSelectedNotif] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Helper to map backend type to UI badge
   const getBadge = (type) => {
     switch (type) {
       case 'reminder': return 'Reminder';
@@ -38,7 +39,6 @@ export default function Notifications() {
     let result = notifications.map(n => ({
       ...n,
       badge: getBadge(n.type),
-      // Ensure we have a Date object for sorting
       timestamp: new Date(n.created_at)
     }));
 
@@ -71,7 +71,6 @@ export default function Notifications() {
 
   const handleMarkAsRead = async (id) => {
     await markAsRead(id);
-    // Update local selectedNotif if it's the one we just read
     if (selectedNotif?.id === id) {
       setSelectedNotif(prev => ({ ...prev, is_read: true }));
     }
@@ -100,10 +99,16 @@ export default function Notifications() {
       />
 
       {loading ? (
-        <div className="flex flex-col gap-4">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="h-24 bg-gray-100 animate-pulse rounded-2xl" />
-          ))}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_20px_-4px_rgba(0,0,0,0.02)] overflow-hidden w-full">
+          <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white/50">
+             <div className="h-5 w-32 bg-gray-100 animate-pulse rounded-md" />
+             <div className="h-4 w-16 bg-gray-50 animate-pulse rounded-md" />
+          </div>
+          <div className="flex flex-col divide-y divide-gray-50">
+            {[1, 2, 3, 4, 5].map((_, i) => (
+              <NotificationSkeleton key={i} index={i} />
+            ))}
+          </div>
         </div>
       ) : (
         <NotificationList 

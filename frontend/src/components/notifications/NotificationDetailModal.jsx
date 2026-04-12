@@ -4,19 +4,16 @@ import { TbPigMoney } from "react-icons/tb";
 import { FiAlertTriangle, FiBell, FiCheckCircle, FiFileText } from "react-icons/fi";
 
 const getIconStyles = (badgeText, type) => {
-  if (badgeText === "Success" || badgeText === "Completed") {
-    if (badgeText === "Success") {
-      return { icon: <TbPigMoney size={24} />, bg: "bg-blue-50", text: "text-blue-500" };
-    }
+  if (type === "success") {
+    return { icon: <TbPigMoney size={24} />, bg: "bg-blue-50", text: "text-blue-500" };
+  }
+  if (type === "completed") {
     return { icon: <FiCheckCircle size={24} />, bg: "bg-emerald-50", text: "text-emerald-500" };
   }
-  if (badgeText === "Reminder") {
+  if (badgeText === "Reminder" || type === "reminder") {
     return { icon: <FiAlertTriangle size={24} />, bg: "bg-orange-50", text: "text-orange-500" };
   }
-  if (badgeText === "Info") {
-    if (type === "memo") {
-      return { icon: <FiFileText size={24} />, bg: "bg-blue-50", text: "text-blue-500" };
-    }
+  if (badgeText === "Info" || type === "info") {
     return { icon: <FiBell size={24} />, bg: "bg-blue-50", text: "text-blue-500" };
   }
   return { icon: <FiBell size={24} />, bg: "bg-gray-100", text: "text-gray-500" };
@@ -63,7 +60,6 @@ export default function NotificationDetailModal({ isOpen, onClose, notif, onMark
             transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
             className="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden"
           >
-            {/* Header matches Transaction/Bill modal pattern */}
             <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
               <div>
                 <h3 className="text-base font-bold text-gray-900">
@@ -81,7 +77,6 @@ export default function NotificationDetailModal({ isOpen, onClose, notif, onMark
               </button>
             </div>
 
-            {/* Body */}
             <div className="px-6 py-5 flex flex-col gap-6">
               <div className="flex items-start gap-4">
                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${bg} ${text} shadow-sm border border-white/50`}>
@@ -90,8 +85,8 @@ export default function NotificationDetailModal({ isOpen, onClose, notif, onMark
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
                     <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wide uppercase ${
-                      notif.badge === 'Success' || notif.badge === 'Completed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
-                      notif.badge === 'Reminder' ? 'bg-orange-50 text-orange-600 border border-orange-100' : 'bg-blue-50 text-blue-600 border border-blue-100'
+                      notif.badge === 'Success' || notif.badge === 'Completed' || notif.type === 'completed' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' :
+                      notif.badge === 'Reminder' || notif.type === 'reminder' ? 'bg-orange-50 text-orange-600 border border-orange-100' : 'bg-blue-50 text-blue-600 border border-blue-100'
                     }`}>
                       {notif.badge}
                     </span>
@@ -113,7 +108,6 @@ export default function NotificationDetailModal({ isOpen, onClose, notif, onMark
               </div>
             </div>
 
-            {/* Footer matches Transaction/Bill modal pattern */}
             <div className="px-6 pb-5 flex gap-3">
               <button
                 onClick={onClose}
