@@ -17,7 +17,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
   const [description, setDescription] = useState("");
   const categoryRef = useRef(null);
 
-  const CATEGORIES = ["Salary", "Goal", "Bill", "Transportasi", "Food & Beverage", "Isi Sendiri..."];
+  const CATEGORIES = ["Salary", "Goal", "Bill", "Transportasi", "Food & Beverage", "Utilities", "Subscription", "Kesehatan", "Isi Sendiri..."];
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -35,7 +35,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
         setNominal(String(Math.abs(initialData.amount)) || "");
         setDescription(initialData.description || "");
         const cat = initialData.category || "";
-        const PRESET = ["Salary", "Goal", "Bill", "Transportasi", "Food & Beverage"];
+        const PRESET = ["Salary", "Goal", "Bill", "Transportasi", "Food & Beverage", "Utilities", "Subscription", "Kesehatan"];
         if (PRESET.includes(cat)) { setCategory(cat); setIsCustomCategory(false); }
         else { setCategory("Isi Sendiri..."); setIsCustomCategory(true); setCustomCategory(cat); }
       } else {

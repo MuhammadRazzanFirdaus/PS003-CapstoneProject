@@ -53,6 +53,8 @@ export const updateBill = (id, data) => {
 };
 export const deleteBill = (id) => api.delete(`/bills/${id}`);
 export const updateBillStatus = (id, isPaid) =>
-  api.patch(`/bills/${id}/status`, { is_paid: isPaid ? 1 : 0 });// Notifications
+  api.patch(`/bills/${id}/status`, { is_paid: isPaid ? 1 : 0 });
+
+// Notifications
 export const getNotifications = (params) => api.get("/notifications", { params });
 export const markNotificationAsRead = (id) => api.patch(`/notifications/${id}/read`);

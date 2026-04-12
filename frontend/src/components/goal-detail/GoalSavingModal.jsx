@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiPlus, FiMinus } from "react-icons/fi";
-import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 
 const formatRupiah = (number) => {
   return new Intl.NumberFormat("id-ID", {
@@ -42,9 +41,9 @@ export default function GoalSavingModal({ isOpen, onClose, onSave, limit, collec
   let errorMessage = "";
   if (isError) {
     if (type === "income") {
-      errorMessage = `The nominal amount you entered is too large compared to your balance. Your limit Rp${formatRupiah(limit)}`;
+      errorMessage = nominal > limit ? `Nominal yang dimasukkan melebihi batas (Saldo atau Sisa Target). Batas Anda: Rp${formatRupiah(limit)}` : "";
     } else {
-      errorMessage = `The nominal amount you entered is too large compared to your collected funds. Your limit Rp${formatRupiah(collected)}`;
+      errorMessage = `Nominal yang dimasukkan melebihi dana yang sudah terkumpul. Batas penarikan: Rp${formatRupiah(collected)}`;
     }
   }
 

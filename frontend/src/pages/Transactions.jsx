@@ -31,7 +31,7 @@ export default function Transactions() {
     return transactions.filter((trx) => {
       const matchesSearch = trx.name.toLowerCase().includes(search.toLowerCase());
       
-      const PRESET_CATEGORIES = ["Salary", "Goal", "Bill", "Transportasi", "Food & Beverage"];
+      const PRESET_CATEGORIES = ["Salary", "Goal", "Bill", "Transportasi", "Food & Beverage", "Utilities", "Subscription", "Housing", "Kesehatan", "Pendidikan", "Hiburan"];
       const matchesCategory =
         categoryFilter === "All Categories"
           ? true
@@ -165,7 +165,6 @@ export default function Transactions() {
         onDelete={handleDeleteTransaction}
         onEdit={handleEditTransaction}
       />
-
     </div>
   );
-}
+}
