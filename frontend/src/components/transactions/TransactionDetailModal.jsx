@@ -22,7 +22,6 @@ export default function TransactionDetailModal({ transaction, isOpen, onClose, o
 
   return (
     <>
-      {/* Detail Modal */}
       <AnimatePresence>
         {isOpen && !isDeleteOpen && (
           <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
@@ -41,7 +40,6 @@ export default function TransactionDetailModal({ transaction, isOpen, onClose, o
               transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
               className="relative bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden"
             >
-              {/* Header strip */}
               <div className={`px-6 pt-6 pb-5 ${isIncome ? "bg-emerald-50" : "bg-red-50"}`}>
                 <button
                   onClick={onClose}
@@ -66,7 +64,6 @@ export default function TransactionDetailModal({ transaction, isOpen, onClose, o
                 <p className="text-sm font-semibold text-gray-800 mt-1">{transaction.name || transaction.title}</p>
               </div>
 
-              {/* Details */}
               <div className="px-6 py-5 flex flex-col gap-4">
                 <DetailRow
                   icon={<FiCalendar size={15} className="text-gray-400" />}
@@ -87,7 +84,6 @@ export default function TransactionDetailModal({ transaction, isOpen, onClose, o
                 )}
               </div>
 
-              {/* Footer */}
               <div className="px-6 pb-6 flex gap-3">
                 <button
                   onClick={() => {
@@ -114,7 +110,6 @@ export default function TransactionDetailModal({ transaction, isOpen, onClose, o
         )}
       </AnimatePresence>
 
-      {/* Delete Confirm Modal — same pattern as GoalSavingItem */}
       <AnimatePresence>
         {isDeleteOpen && (
           <div className="fixed inset-0 z-110 flex items-center justify-center p-4">

@@ -130,7 +130,6 @@ export default function GoalDetail() {
     }, 0) || 0;
   const collected = (Number(goal?.initial_amount) || 0) + totalSavings;
 
-  // Total balance from real transactions (limit for Add Funds)
   const limit = transactions?.reduce((acc, tx) => {
     const amount = Number(tx.amount) || 0;
     return tx.type === "income" ? acc + amount : acc - amount;

@@ -1,35 +1,68 @@
-import { FiTarget, FiMail, FiBriefcase } from "react-icons/fi";
+import { 
+  FiTarget, FiBriefcase, FiCoffee, FiShoppingBag, FiBook,
+  FiHome, FiHeart, FiFilm, FiTruck, FiFileText, FiDollarSign, 
+  FiActivity 
+} from "react-icons/fi";
 
 const getIconStyles = (category, isIncome) => {
   const cat = category?.toLowerCase() || "";
-  if (cat.includes("sekolah") || cat.includes("book") || cat.includes("study")) {
+  
+  if (cat.includes("sekolah") || cat.includes("book") || cat.includes("study") || cat.includes("education")) {
     return {
-      icon: <FiBriefcase className="w-5 h-5 text-gray-700" />,
-      bg: "bg-gray-100"
+      icon: <FiBook className="w-5 h-5 text-indigo-500" />,
+      bg: "bg-indigo-50"
     };
-  } else if (cat.includes("makan") || cat.includes("food") || cat.includes("beverage")) {
+  } else if (cat.includes("makan") || cat.includes("food") || cat.includes("beverage") || cat.includes("drink")) {
     return {
-      icon: <FiTarget className="w-5 h-5 text-orange-500" />,
+      icon: <FiCoffee className="w-5 h-5 text-orange-500" />,
       bg: "bg-orange-50"
     };
-  } else if (cat.includes("gaji") || cat.includes("salary")) {
+  } else if (cat.includes("gaji") || cat.includes("salary") || cat.includes("income")) {
     return {
-      icon: <FiMail className="w-5 h-5 text-emerald-500" />,
+      icon: <FiBriefcase className="w-5 h-5 text-emerald-500" />,
       bg: "bg-emerald-50"
     };
-  } else if (cat.includes("goal")) {
+  } else if (cat.includes("belanja") || cat.includes("shopping") || cat.includes("grocery")) {
+    return {
+      icon: <FiShoppingBag className="w-5 h-5 text-pink-500" />,
+      bg: "bg-pink-50"
+    };
+  } else if (cat.includes("goal") || cat.includes("target") || cat.includes("tabungan")) {
     return {
       icon: <FiTarget className="w-5 h-5 text-blue-500" />,
       bg: "bg-blue-50"
     };
-  } else if (cat.includes("transport")) {
+  } else if (cat.includes("transport") || cat.includes("travel") || cat.includes("tiket")) {
     return {
-      icon: <FiBriefcase className="w-5 h-5 text-purple-500" />,
+      icon: <FiTruck className="w-5 h-5 text-purple-500" />,
       bg: "bg-purple-50"
     };
+  } else if (cat.includes("kesehatan") || cat.includes("health") || cat.includes("medical") || cat.includes("obat")) {
+    return {
+      icon: <FiHeart className="w-5 h-5 text-rose-500" />,
+      bg: "bg-rose-50"
+    };
+  } else if (cat.includes("rumah") || cat.includes("home") || cat.includes("kost") || cat.includes("sewa")) {
+    return {
+      icon: <FiHome className="w-5 h-5 text-amber-600" />,
+      bg: "bg-amber-50"
+    };
+  } else if (cat.includes("hiburan") || cat.includes("entertainment") || cat.includes("movie") || cat.includes("game")) {
+    return {
+      icon: <FiFilm className="w-5 h-5 text-cyan-500" />,
+      bg: "bg-cyan-50"
+    };
+  } else if (cat.includes("tagihan") || cat.includes("bill") || cat.includes("listrik") || cat.includes("air")) {
+    return {
+      icon: <FiFileText className="w-5 h-5 text-slate-600" />,
+      bg: "bg-slate-100"
+    };
   }
+  
+  // Default fallback
+  const DefaultIcon = isIncome ? FiDollarSign : FiActivity;
   return {
-    icon: <FiTarget className={`w-5 h-5 ${isIncome ? "text-emerald-500" : "text-red-500"}`} />,
+    icon: <DefaultIcon className={`w-5 h-5 ${isIncome ? "text-emerald-500" : "text-red-500"}`} />,
     bg: isIncome ? "bg-emerald-50" : "bg-red-50"
   };
 };
