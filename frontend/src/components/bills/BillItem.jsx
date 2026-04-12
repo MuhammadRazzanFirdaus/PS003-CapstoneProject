@@ -1,17 +1,56 @@
 import { useState } from "react";
-import { FiZap, FiWifi, FiHome } from "react-icons/fi";
+import {
+  FiZap, FiWifi, FiHome, FiDroplet, FiPhone,
+  FiMonitor, FiShield, FiTruck, FiHeart, FiBook,
+  FiCreditCard, FiShoppingBag, FiTv, FiFileText
+} from "react-icons/fi";
+import { MdOutlineLocalGroceryStore } from "react-icons/md";
 import BillDetailModal from "./BillDetailModal";
 
 const getIconStyles = (category) => {
   const cat = category?.toLowerCase() || "";
-  if (cat.includes("utilities") || cat.includes("listrik")) {
-    return { icon: <FiZap className="w-5 h-5 text-blue-500" />, bg: "bg-blue-50" };
-  } else if (cat.includes("subscription") || cat.includes("internet")) {
-    return { icon: <FiWifi className="w-5 h-5 text-purple-500" />, bg: "bg-purple-50" };
-  } else if (cat.includes("housing") || cat.includes("rent") || cat.includes("sewa")) {
+
+  if (cat.includes("listrik") || cat.includes("electric") || cat.includes("utilities") || cat.includes("pln")) {
+    return { icon: <FiZap className="w-5 h-5 text-yellow-500" />, bg: "bg-yellow-50" };
+  }
+  if (cat.includes("air") || cat.includes("water") || cat.includes("pdam")) {
+    return { icon: <FiDroplet className="w-5 h-5 text-blue-500" />, bg: "bg-blue-50" };
+  }
+  if (cat.includes("internet") || cat.includes("wifi") || cat.includes("broadband")) {
+    return { icon: <FiWifi className="w-5 h-5 text-indigo-500" />, bg: "bg-indigo-50" };
+  }
+  if (cat.includes("telepon") || cat.includes("phone") || cat.includes("pulsa") || cat.includes("mobile")) {
+    return { icon: <FiPhone className="w-5 h-5 text-green-500" />, bg: "bg-green-50" };
+  }
+  if (cat.includes("sewa") || cat.includes("rent") || cat.includes("housing") || cat.includes("kost") || cat.includes("kontrakan")) {
     return { icon: <FiHome className="w-5 h-5 text-rose-500" />, bg: "bg-rose-50" };
   }
-  return { icon: <FiZap className="w-5 h-5 text-gray-500" />, bg: "bg-gray-50" };
+  if (cat.includes("subscription") || cat.includes("langganan") || cat.includes("netflix") || cat.includes("spotify") || cat.includes("streaming")) {
+    return { icon: <FiTv className="w-5 h-5 text-purple-500" />, bg: "bg-purple-50" };
+  }
+  if (cat.includes("asuransi") || cat.includes("insurance") || cat.includes("bpjs")) {
+    return { icon: <FiShield className="w-5 h-5 text-emerald-500" />, bg: "bg-emerald-50" };
+  }
+  if (cat.includes("transport") || cat.includes("kendaraan") || cat.includes("mobil") || cat.includes("motor") || cat.includes("cicilan")) {
+    return { icon: <FiTruck className="w-5 h-5 text-orange-500" />, bg: "bg-orange-50" };
+  }
+  if (cat.includes("kesehatan") || cat.includes("health") || cat.includes("medical") || cat.includes("dokter") || cat.includes("obat")) {
+    return { icon: <FiHeart className="w-5 h-5 text-pink-500" />, bg: "bg-pink-50" };
+  }
+  if (cat.includes("pendidikan") || cat.includes("education") || cat.includes("sekolah") || cat.includes("kuliah") || cat.includes("kursus")) {
+    return { icon: <FiBook className="w-5 h-5 text-cyan-500" />, bg: "bg-cyan-50" };
+  }
+  if (cat.includes("software") || cat.includes("apps") || cat.includes("digital") || cat.includes("cloud") || cat.includes("hosting")) {
+    return { icon: <FiMonitor className="w-5 h-5 text-violet-500" />, bg: "bg-violet-50" };
+  }
+  if (cat.includes("kartu kredit") || cat.includes("credit card") || cat.includes("pinjaman") || cat.includes("loan")) {
+    return { icon: <FiCreditCard className="w-5 h-5 text-red-500" />, bg: "bg-red-50" };
+  }
+  if (cat.includes("belanja") || cat.includes("groceries") || cat.includes("shopping")) {
+    return { icon: <MdOutlineLocalGroceryStore className="w-5 h-5 text-amber-600" />, bg: "bg-amber-50" };
+  }
+
+  return { icon: <FiFileText className="w-5 h-5 text-gray-500" />, bg: "bg-gray-100" };
 };
 
 const getStatusBadge = (status) => {

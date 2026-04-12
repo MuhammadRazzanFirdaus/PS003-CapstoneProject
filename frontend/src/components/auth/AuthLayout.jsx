@@ -8,7 +8,7 @@ export default function AuthLayout({ children, title, subtitle }) {
   return (
     <div className="min-h-screen bg-white flex font-sans">
       <div className="w-full lg:w-[45%] xl:w-[40%] flex flex-col pt-8 px-6 sm:px-12 lg:px-16 xl:px-24 relative z-10">
-        <div className="flex items-center gap-1 font-bold text-2xl mb-auto">
+        <div className="flex items-center font-bold text-2xl mb-auto">
           <span className="text-[#3b82f6]">Fin</span>
           <span className="text-[#111827]">Go</span>
         </div>

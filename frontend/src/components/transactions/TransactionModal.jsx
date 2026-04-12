@@ -81,7 +81,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
             transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
             className="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl"
           >
-            {/* Header */}
+
             <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
               <div>
                 <h3 className="text-base font-bold text-gray-900">
@@ -99,9 +99,9 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
               </button>
             </div>
 
-            {/* Body */}
+
             <div className="px-6 py-5 flex flex-col gap-4">
-              {/* Type Toggle */}
+
               <div className="flex p-1 bg-gray-100 rounded-xl">
                 <button
                   onClick={() => setType("income")}
@@ -121,7 +121,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
                 </button>
               </div>
 
-              {/* Name */}
+
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Name / Title</label>
                 <input
@@ -133,7 +133,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
                 />
               </div>
 
-              {/* Nominal & Category side by side */}
+
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
@@ -227,7 +227,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
                 </div>
               </div>
 
-              {/* Description */}
+
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
                   Description <span className="normal-case font-normal text-gray-400">(optional)</span>
@@ -242,7 +242,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
               </div>
             </div>
 
-            {/* Footer */}
+
             <div className="px-6 pb-5 flex gap-3">
               <button
                 onClick={onClose}

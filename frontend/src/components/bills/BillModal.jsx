@@ -82,7 +82,7 @@ export default function BillModal({ isOpen, onClose, onSave, initialData = null 
             transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
             className="relative bg-white w-full max-w-lg rounded-2xl shadow-2xl"
           >
-            {/* Header */}
+
             <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-gray-100">
               <div>
                 <h3 className="text-base font-bold text-gray-900">
@@ -100,9 +100,9 @@ export default function BillModal({ isOpen, onClose, onSave, initialData = null 
               </button>
             </div>
 
-            {/* Body */}
+
             <div className="px-6 py-5 flex flex-col gap-4">
-              {/* Name */}
+
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Bill Name</label>
                 <input
@@ -114,7 +114,7 @@ export default function BillModal({ isOpen, onClose, onSave, initialData = null 
                 />
               </div>
 
-              {/* Amount & Due Date side by side */}
+
               <div className="grid grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Amount</label>
@@ -141,7 +141,7 @@ export default function BillModal({ isOpen, onClose, onSave, initialData = null 
                 </div>
               </div>
 
-              {/* Category */}
+
               <div className="flex flex-col gap-1.5" ref={categoryRef}>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Category</label>
                 <div className="relative">
@@ -210,7 +210,7 @@ export default function BillModal({ isOpen, onClose, onSave, initialData = null 
               </div>
             </div>
 
-            {/* Footer */}
+
             <div className="px-6 pb-5 flex gap-3">
               <button
                 onClick={onClose}

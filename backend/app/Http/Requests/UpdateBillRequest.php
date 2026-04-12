@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreBillRequest extends FormRequest
+class UpdateBillRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -16,12 +16,11 @@ class StoreBillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'nullable|exists:users,id',
-            'name' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'due_date' => 'required|date',
-            'category' => 'required|string',
-            'is_paid' => 'boolean'
+            'name' => 'sometimes|required|string|max:255',
+            'amount' => 'sometimes|required|numeric',
+            'due_date' => 'sometimes|required|date',
+            'category' => 'sometimes|required|string',
+            'is_paid' => 'sometimes|boolean'
         ];
     }
 

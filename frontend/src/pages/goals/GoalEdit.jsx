@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MdArrowBackIos } from "react-icons/md";
-import { updateGoal, getGoalById } from "../../api/fingo";
+import { getGoalById } from "../../api/fingo";
 import { getAuthUserId } from "../../utils/auth";
+import GoalImageUpload from "../../components/goal-create/GoalImageUpload";
 import GoalFormFields from "../../components/goal-create/GoalFormFields";
 import GoalRecommendation from "../../components/goal-create/GoalRecommendation";
+import { useGoalCalculator } from "../../hooks/useGoalCalculator";
+import axiosInstance from "../../api/axios";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -29,6 +32,8 @@ export default function GoalEdit() {
     initial_amount: "",
     target_date: "",
   });
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState(null);
@@ -45,8 +50,9 @@ export default function GoalEdit() {
           saving_amount: data.saving_amount || "",
           saving_period: data.saving_period || "",
           initial_amount: data.initial_amount || "",
-          target_date: data.target_date ? data.target_date.split('T')[0] : "",
+          target_date: data.target_date ? data.target_date.split("T")[0] : "",
         });
+        setImagePreview(data.image_url);
       } catch (err) {
         console.error(err);
         setError("Gagal mengambil data goal.");
@@ -61,60 +67,12 @@ export default function GoalEdit() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const calcDays = () => {
-    if (!form.target_date) return 0;
-    return Math.max(
-      1,
-      Math.ceil(
-        (new Date(form.target_date) - new Date()) / (1000 * 60 * 60 * 24),
-      ),
-    );
+  const handleImageChange = (file, preview) => {
+    setImage(file);
+    setImagePreview(preview);
   };
 
-  const getRecAndAlert = () => {
-    const target = Number(form.target_amount) || 0;
-    const initial = Number(form.initial_amount) || 0;
-    const savingAmount = Number(form.saving_amount) || 0;
-    const remaining = target - initial;
-
-    if (!form.target_date || remaining <= 0) return { rec: null, alert: null };
-
-    const days = calcDays();
-    const weeks = Math.max(1, Math.ceil(days / 7));
-    const months = Math.max(1, Math.ceil(days / 30));
-
-    if (savingAmount > 0 && form.saving_period) {
-      let totalSaved = 0;
-      if (form.saving_period === "daily") totalSaved = savingAmount * days;
-      if (form.saving_period === "weekly") totalSaved = savingAmount * weeks;
-      if (form.saving_period === "monthly") totalSaved = savingAmount * months;
-
-      if (totalSaved < remaining) {
-        const shortfall = remaining - totalSaved;
-        return {
-          rec: null,
-          alert: `Dengan menabung Rp${savingAmount.toLocaleString("id-ID")}/${form.saving_period} kamu masih kurang Rp${shortfall.toLocaleString("id-ID")} untuk mencapai target.`,
-        };
-      }
-
-      return { rec: null, alert: null };
-    }
-
-    return {
-      rec: {
-        daily: Math.ceil(remaining / days),
-        weekly: days >= 7 ? Math.ceil(remaining / weeks) : null,
-        monthly: days >= 30 ? Math.ceil(remaining / months) : null,
-      },
-      alert: null,
-    };
-  };
-
-  const { rec, alert } = getRecAndAlert();
-
-  const handleSelect = (value, period) => {
-    setForm((p) => ({ ...p, saving_amount: value, saving_period: period }));
-  };
+  const { calcDays, rec, alert, handleSelect } = useGoalCalculator(form, setForm);
 
   const handleSubmit = async () => {
     if (!form.name || !form.target_amount || !form.target_date) {
@@ -149,9 +107,18 @@ export default function GoalEdit() {
           ? "not_achieved"
           : "in_progress";
 
-      const payload = { ...form, status, user_id: authUserId };
+      const formData = new FormData();
+      formData.append("_method", "PUT");
+      Object.entries({ ...form, status, user_id: authUserId }).forEach(
+        ([key, val]) => {
+          if (val !== "") formData.append(key, val);
+        }
+      );
+      if (image) formData.append("image", image);
 
-      await updateGoal(id, payload);
+      await axiosInstance.post(`/goals/${id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       navigate(`/goals/${id}`);
     } catch (err) {
       console.log("error response:", err.response?.data);
@@ -160,9 +127,7 @@ export default function GoalEdit() {
         const first = Object.values(messages)[0];
         setError(Array.isArray(first) ? first[0] : first);
       } else {
-        setError(
-          err.response?.data?.message ?? "Gagal menyimpan goal. Coba lagi.",
-        );
+        setError(err.response?.data?.message ?? "Gagal menyimpan goal. Coba lagi.");
       }
     } finally {
       setLoading(false);
@@ -192,6 +157,7 @@ export default function GoalEdit() {
         className="bg-white rounded-2xl p-6 flex flex-col gap-6"
       >
         <h2 className="text-lg font-bold">Edit Goal</h2>
+        <GoalImageUpload imagePreview={imagePreview} onImageChange={handleImageChange} />
         <GoalFormFields form={form} onChange={handleChange} />
       </motion.div>
 
