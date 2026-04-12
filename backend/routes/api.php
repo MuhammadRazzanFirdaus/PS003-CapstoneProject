@@ -42,6 +42,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // BILLS & PAYMENTS 
     Route::get('bills', [BillController::class, 'index']);
     Route::post('bills', [BillController::class, 'store']);
+    Route::put('bills/{id}', [BillController::class, 'update']);
+    Route::patch('bills/{id}', [BillController::class, 'update']);
     Route::patch('bills/{id}/status', [BillController::class, 'updateStatus']);
     Route::delete('bills/{id}', [BillController::class, 'destroy']);
 

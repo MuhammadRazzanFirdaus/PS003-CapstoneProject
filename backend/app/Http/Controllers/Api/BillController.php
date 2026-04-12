@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBillRequest;
+use App\Http\Requests\UpdateBillRequest;
 use App\Http\Requests\UpdateBillStatusRequest;
 use App\Models\Bill;
 use Illuminate\Http\Request;
@@ -31,9 +32,16 @@ class BillController extends Controller
         $bill = Bill::where('user_id', auth()->id())->findOrFail($id);
         $bill->update([
             'is_paid' => $request->is_paid,
-            'status' => $request->is_paid ? 'paid' : 'unpaid',
-            'paid_at' => $request->is_paid ? now() : null
+            'paid_at' => $request->is_paid ? now() : null,
         ]);
+
+        return response()->json(['success' => true, 'data' => $bill]);
+    }
+
+    public function update(UpdateBillRequest $request, $id)
+    {
+        $bill = Bill::where('user_id', auth()->id())->findOrFail($id);
+        $bill->update($request->validated());
 
         return response()->json(['success' => true, 'data' => $bill]);
     }
