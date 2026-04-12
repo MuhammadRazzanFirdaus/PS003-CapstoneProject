@@ -7,6 +7,7 @@ import GoalDetailInfo from "../../components/goal-detail/GoalDetailInfo";
 import GoalDetailStats from "../../components/goal-detail/GoalDetailStats";
 import GoalSavingItem from "../../components/goal-detail/GoalSavingItem";
 import GoalSavingModal from "../../components/goal-detail/GoalSavingModal";
+import SavingSkeleton from "../../components/goal-detail/SavingSkeleton";
 import axiosInstance from "../../api/axios";
 
 import { toast } from "react-toastify";
@@ -21,47 +22,6 @@ const fadeUp = {
     transition: { duration: 0.35, delay: i * 0.08, ease: "easeOut" },
   }),
 };
-
-const shimmer = {
-  initial: { opacity: 0.5 },
-  animate: { opacity: 1 },
-  transition: {
-    duration: 0.8,
-    repeat: Infinity,
-    repeatType: "reverse",
-    ease: "easeInOut",
-  },
-};
-
-function SavingSkeleton({ index }) {
-  const delay = index * 0.06;
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay }}
-      className="bg-white rounded-xl px-4 py-3 flex items-center justify-between"
-    >
-      <div className="flex flex-col gap-2">
-        <motion.div
-          {...shimmer}
-          transition={{ ...shimmer.transition, delay }}
-          className="h-4 w-32 bg-gray-200 rounded"
-        />
-        <motion.div
-          {...shimmer}
-          transition={{ ...shimmer.transition, delay: delay + 0.1 }}
-          className="h-3 w-24 bg-gray-200 rounded"
-        />
-      </div>
-      <motion.div
-        {...shimmer}
-        transition={{ ...shimmer.transition, delay: delay + 0.15 }}
-        className="h-4 w-24 bg-gray-200 rounded"
-      />
-    </motion.div>
-  );
-}
 
 export default function GoalDetail() {
   const { id } = useParams();
