@@ -40,6 +40,8 @@ class GoalSavingController extends Controller
 
             $goal->syncStatus();
 
+            auth()->user()->recordActivity();
+
             Transaction::create([
                 'user_id' => $goal->user_id,
                 'name' => 'Goal: ' . $goal->name,
@@ -84,6 +86,14 @@ class GoalSavingController extends Controller
 
             $saving->goal->syncStatus();
 
+            $transaction = Transaction::where('description', 'like', '%(Ref: #' . $id . ')')->first();
+            if ($transaction) {
+                $transaction->update([
+                    'amount' => $validated['amount'],
+                    'type' => $validated['type'] === 'income' ? 'expense' : 'income',
+                ]);
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Saving updated.',
@@ -99,7 +109,7 @@ class GoalSavingController extends Controller
     {
         try {
             $saving = GoalSaving::findOrFail($id);
-            $goal   = $saving->goal;
+            $goal = $saving->goal;
             $saving->delete();
 
             $goal->syncStatus();

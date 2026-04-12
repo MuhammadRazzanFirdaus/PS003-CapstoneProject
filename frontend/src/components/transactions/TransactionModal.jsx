@@ -17,7 +17,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
   const [description, setDescription] = useState("");
   const categoryRef = useRef(null);
 
-  const CATEGORIES = ["Salary", "Goal", "Transportasi", "Food & Beverage", "Isi Sendiri..."];
+  const CATEGORIES = ["Salary", "Goal", "Bill", "Transportasi", "Food & Beverage", "Isi Sendiri..."];
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -35,7 +35,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
         setNominal(String(Math.abs(initialData.amount)) || "");
         setDescription(initialData.description || "");
         const cat = initialData.category || "";
-        const PRESET = ["Salary", "Goal", "Transportasi", "Food & Beverage"];
+        const PRESET = ["Salary", "Goal", "Bill", "Transportasi", "Food & Beverage"];
         if (PRESET.includes(cat)) { setCategory(cat); setIsCustomCategory(false); }
         else { setCategory("Isi Sendiri..."); setIsCustomCategory(true); setCustomCategory(cat); }
       } else {
@@ -169,7 +169,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm outline-none cursor-pointer hover:border-gray-300 transition-colors flex items-center justify-between select-none text-gray-900"
                     >
                       <span className={!activeCategory ? "text-gray-400" : "truncate"}>
-                        {isCustomCategory ? (customCategory || "Ketik...") : category}
+                        {isCustomCategory ? "Isi Sendiri..." : category}
                       </span>
                       <MdKeyboardArrowDown
                         size={18}

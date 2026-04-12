@@ -31,7 +31,7 @@ export default function Transactions() {
     return transactions.filter((trx) => {
       const matchesSearch = trx.name.toLowerCase().includes(search.toLowerCase());
       
-      const PRESET_CATEGORIES = ["Salary", "Goal", "Transportasi", "Food & Beverage"];
+      const PRESET_CATEGORIES = ["Salary", "Goal", "Bill", "Transportasi", "Food & Beverage"];
       const matchesCategory =
         categoryFilter === "All Categories"
           ? true

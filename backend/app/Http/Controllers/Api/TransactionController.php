@@ -14,7 +14,7 @@ class TransactionController extends Controller
     {
         $transactions = Transaction::where('user_id', auth()->id())->get();
 
-            return response()->json(['success' => true, 'data' => $transactions]);
+        return response()->json(['success' => true, 'data' => $transactions]);
     }
 
     public function store(StoreTransactionRequest $request)
@@ -38,6 +38,33 @@ class TransactionController extends Controller
         $transaction = Transaction::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
         $transaction->update($request->all());
 
+        if (preg_match('/\(Ref: #(\d+)\)/', $transaction->description, $matches)) {
+            $savingId = $matches[1];
+            $saving = GoalSaving::find($savingId);
+
+            if ($saving) {
+                $saving->update([
+                    'amount' => $transaction->amount,
+                    'type' => $transaction->type === 'expense' ? 'income' : 'expense',
+                ]);
+
+                if ($saving->goal) {
+                    $saving->goal->syncStatus();
+                }
+            }
+        }
+
+        if (preg_match('/\(Bill Ref: #(\d+)\)/', $transaction->description, $matches)) {
+            $billId = $matches[1];
+            $bill = \App\Models\Bill::find($billId);
+
+            if ($bill) {
+                $bill->update([
+                    'amount' => $transaction->amount,
+                ]);
+            }
+        }
+
         return response()->json(['success' => true, 'data' => $transaction]);
     }
 
@@ -48,19 +75,31 @@ class TransactionController extends Controller
         if (preg_match('/\(Ref: #(\d+)\)/', $transaction->description, $matches)) {
             $savingId = $matches[1];
             $saving = GoalSaving::find($savingId);
-            
+
             if ($saving) {
                 $goal = $saving->goal;
                 $saving->delete();
-                
+
                 if ($goal) {
                     $goal->syncStatus();
                 }
             }
         }
 
+        if (preg_match('/\(Bill Ref: #(\d+)\)/', $transaction->description, $matches)) {
+            $billId = $matches[1];
+            $bill = \App\Models\Bill::find($billId);
+
+            if ($bill) {
+                $bill->update([
+                    'is_paid' => false,
+                    'paid_at' => null,
+                ]);
+            }
+        }
+
         $transaction->delete();
-        
+
         return response()->json(['success' => true, 'message' => 'Transaksi dihapus']);
     }
 }
