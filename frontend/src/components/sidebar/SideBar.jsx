@@ -104,7 +104,10 @@ export default function SideBar() {
 
       <div className="border-t border-gray-700 px-2 py-3 shrink-0">
         {user && (
-          <div className="flex items-center gap-3 px-2 overflow-hidden">
+          <div
+            onClick={() => navigate("/profile")}
+            className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-gray-800 transition-colors cursor-pointer overflow-hidden group"
+          >
             {user?.image ? (
               <img
                 src={user.image}
@@ -125,10 +128,10 @@ export default function SideBar() {
                   transition={{ duration: 0.2 }}
                   className="flex flex-col flex-1 min-w-0 overflow-hidden"
                 >
-                  <span className="text-sm font-medium truncate">
+                  <span className="text-sm font-medium truncate group-hover:text-white transition-colors">
                     {user?.name || "Username"}
                   </span>
-                  <span className="text-xs text-gray-400 truncate">
+                  <span className="text-xs text-gray-400 truncate group-hover:text-gray-300 transition-colors">
                     {user?.email || "user@email.com"}
                   </span>
                 </motion.div>

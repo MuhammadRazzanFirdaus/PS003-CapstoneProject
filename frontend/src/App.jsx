@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import StreakCard from "./components/dashboard/StreakCard";
 import SummaryCard from "./components/dashboard/SummaryCard";
@@ -6,6 +6,7 @@ import GoalPreview from "./components/dashboard/GoalPreview";
 import TransactionPreview from "./components/dashboard/TransactionPreview";
 import WelcomeBanner from "./components/dashboard/WelcomeBanner";
 import { useTransactions } from "./hooks/useTransactions";
+import { getCurrentUser } from "./api/fingo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -18,6 +19,18 @@ const fadeUp = {
 
 export default function App() {
   const { transactions } = useTransactions();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    getCurrentUser()
+      .then((res) => {
+        if (!isMounted) return;
+        setUser(res.data?.data);
+      })
+      .catch(() => {});
+    return () => { isMounted = false; };
+  }, []);
 
   const { totalSaved, incomeThisMonth, expenseThisMonth } = useMemo(() => {
     const now = new Date();
@@ -60,7 +73,7 @@ export default function App() {
         animate="show"
         className="p-4"
       >
-        <WelcomeBanner name="Zanny"/>
+        <WelcomeBanner name={user?.name || "User"}/>
       </motion.div>
 
       <motion.div

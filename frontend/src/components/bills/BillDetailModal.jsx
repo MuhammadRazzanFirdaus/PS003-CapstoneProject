@@ -73,7 +73,7 @@ export default function BillDetailModal({ bill, isOpen, onClose, onDelete, onPay
               transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
               className="relative bg-white w-full max-w-sm rounded-2xl shadow-xl overflow-hidden"
             >
-              {/* Header Strip */}
+
               <div className={`px-6 pt-6 pb-5 ${style.bg}`}>
                 <button
                   onClick={onClose}
@@ -93,7 +93,7 @@ export default function BillDetailModal({ bill, isOpen, onClose, onDelete, onPay
                 <p className="text-sm font-semibold text-gray-800 mt-1">{bill.name}</p>
               </div>
 
-              {/* Details */}
+
               <div className="px-6 py-5 flex flex-col gap-4">
                 <DetailRow
                   icon={<FiCalendar size={15} className="text-gray-400" />}
@@ -119,7 +119,7 @@ export default function BillDetailModal({ bill, isOpen, onClose, onDelete, onPay
                 />
               </div>
 
-              {/* Footer Buttons */}
+
               <div className="px-6 pb-6 flex flex-col gap-2">
                 {!isPaid && (
                   <button
@@ -153,7 +153,7 @@ export default function BillDetailModal({ bill, isOpen, onClose, onDelete, onPay
         )}
       </AnimatePresence>
 
-      {/* Delete Confirmation Modal */}
+
       <AnimatePresence>
         {isDeleteOpen && (
           <div className="fixed inset-0 z-110 flex items-center justify-center p-4">
