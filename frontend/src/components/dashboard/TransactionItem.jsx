@@ -59,7 +59,7 @@ const getIconStyles = (category, isIncome) => {
     };
   }
   
-  // Default fallback
+
   const DefaultIcon = isIncome ? FiDollarSign : FiActivity;
   return {
     icon: <DefaultIcon className={`w-5 h-5 ${isIncome ? "text-emerald-500" : "text-red-500"}`} />,

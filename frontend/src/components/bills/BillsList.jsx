@@ -26,7 +26,7 @@ export default function BillsList({ bills, loading, activeTab, search, sortOrder
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      {/* Table Header */}
+
       <div className="grid grid-cols-[3fr_2fr_2fr_2fr_1.5fr] items-center py-4 border-b border-gray-100 bg-gray-50/50">
         <div className="px-6 text-left">
           <p className="text-xs font-semibold text-gray-400">Bill Name</p>
@@ -45,7 +45,7 @@ export default function BillsList({ bills, loading, activeTab, search, sortOrder
         </div>
       </div>
 
-      {/* Table Body */}
+
       <div className="flex flex-col min-h-[200px] relative">
         <AnimatePresence mode="popLayout">
           {loading ? (
@@ -99,7 +99,7 @@ export default function BillsList({ bills, loading, activeTab, search, sortOrder
         </AnimatePresence>
       </div>
 
-      {/* Pagination */}
+
       <div className="flex flex-col sm:flex-row items-center justify-between p-4 border-t border-gray-100 text-sm text-gray-500">
         <p>Showing {filteredBills.length > 0 ? 1 : 0} to {Math.min(5, filteredBills.length)} of {filteredBills.length} bills</p>
         <div className="flex items-center gap-1 mt-4 sm:mt-0">

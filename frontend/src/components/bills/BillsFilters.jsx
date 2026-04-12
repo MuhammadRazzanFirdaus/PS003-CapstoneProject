@@ -19,7 +19,7 @@ export default function BillsFilters({ activeTab, setActiveTab, search, setSearc
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-4 sm:px-0">
       <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-        {/* Status Tabs */}
+
         <div className="flex gap-2">
           {tabs.map((tab) => (
             <button
@@ -36,7 +36,7 @@ export default function BillsFilters({ activeTab, setActiveTab, search, setSearc
           ))}
         </div>
 
-        {/* Search */}
+
         <div className="relative w-full sm:w-64">
           <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
