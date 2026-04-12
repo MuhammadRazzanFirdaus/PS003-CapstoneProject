@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdArrowBackIos, MdOutlineNotificationsNone, MdLogout, MdLogin } from "react-icons/md";
@@ -7,7 +7,9 @@ import { TbTargetArrow } from "react-icons/tb";
 import { RiBillLine } from "react-icons/ri";
 import { LuWallet } from "react-icons/lu";
 import { useSidebar } from "../../context/SidebarContext";
-import { logout, getCurrentUser } from "../../api/fingo";
+import { useAuth } from "../../context/AuthContext";
+import { useNotifications } from "../../hooks/useNotifications";
+import { logout } from "../../api/fingo";
 import { removeAuthToken } from "../../utils/auth";
 import NavItem from "./NavItem";
 
@@ -16,33 +18,15 @@ const navItems = [
   { icon: <TbTargetArrow size={18} />, label: "Goals", path: "/goals" },
   { icon: <LuWallet size={18} />, label: "Transactions", path: "/transactions" },
   { icon: <RiBillLine size={18} />, label: "Bills", path: "/bills" },
-  { icon: <MdOutlineNotificationsNone size={18} />, label: "Notifications", path: "/notifications" },
+  { icon: <MdOutlineNotificationsNone size={18} />, label: "Notifications", path: "/notifications", isNotify: true },
 ];
 
 export default function SideBar() {
   const navigate = useNavigate();
   const { isOpen, toggleSidebar } = useSidebar();
+  const { user } = useAuth();
+  const { unreadCount } = useNotifications();
   const [loggingOut, setLoggingOut] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    getCurrentUser()
-      .then((res) => {
-        if (!isMounted) return;
-        const userData = res.data?.data;
-        setUser(userData ?? null);
-      })
-      .catch(() => {
-        if (!isMounted) return;
-        setUser(null);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const handleLogout = async () => {
     if (loggingOut) return;
@@ -97,7 +81,7 @@ export default function SideBar() {
 
       <nav className="flex-1 py-4 flex flex-col gap-1 px-2">
         {navItems.map((item) => (
-          <NavItem key={item.label} {...item} />
+          <NavItem key={item.label} {...item} badge={item.isNotify ? unreadCount : 0} />
         ))}
       </nav>
 

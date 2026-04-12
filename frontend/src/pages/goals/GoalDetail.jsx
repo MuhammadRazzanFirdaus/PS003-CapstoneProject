@@ -90,10 +90,11 @@ export default function GoalDetail() {
     }, 0) || 0;
   const collected = (Number(goal?.initial_amount) || 0) + totalSavings;
 
-  const limit = transactions?.reduce((acc, tx) => {
-    const amount = Number(tx.amount) || 0;
-    return tx.type === "income" ? acc + amount : acc - amount;
-  }, 0) || 0;
+  const limit =
+    transactions?.reduce((acc, tx) => {
+      const amount = Number(tx.amount) || 0;
+      return tx.type === "income" ? acc + amount : acc - amount;
+    }, 0) || 0;
 
   return (
     <div className="py-10 px-30 flex flex-col gap-6">
@@ -127,7 +128,7 @@ export default function GoalDetail() {
       <motion.div custom={4} variants={fadeUp} initial="hidden" animate="show">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-bold">Goal Savings</h2>
-          <button 
+          <button
             onClick={() => navigate(`/goals/${id}/savings`)}
             className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer"
           >
@@ -158,7 +159,12 @@ export default function GoalDetail() {
               savings
                 .slice(0, 3)
                 .map((saving, i) => (
-                  <GoalSavingItem key={saving.id} saving={saving} index={i} onDelete={handleDeleteSaving} />
+                  <GoalSavingItem
+                    key={saving.id}
+                    saving={saving}
+                    index={i}
+                    onDelete={handleDeleteSaving}
+                  />
                 ))}
           </AnimatePresence>
         </div>
