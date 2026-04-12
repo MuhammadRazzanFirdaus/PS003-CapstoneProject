@@ -87,7 +87,6 @@ export default function Transactions() {
 
   const handleSaveTransaction = async (data) => {
     try {
-      // Build FormData to match Postman form-data perfectly
       const formData = new FormData();
       
       const authUserId = getAuthUserId();

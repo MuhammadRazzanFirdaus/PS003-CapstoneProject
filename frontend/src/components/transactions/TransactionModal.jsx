@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FiPlus, FiMinus } from "react-icons/fi";
 import { MdKeyboardArrowDown } from "react-icons/md";
 
-// Utility for formatting Rupiah
 const formatRupiah = (number) => {
   return new Intl.NumberFormat("id-ID", {
     minimumFractionDigits: 0,
@@ -34,7 +33,6 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Pre-fill data if initialData is provided (Edit Mode)
   useEffect(() => {
     if (isOpen) {
       if (initialData) {
@@ -54,7 +52,6 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
           setCustomCategory(cat);
         }
       } else {
-        // Reset to default for Add Mode
         setType("expense");
         setName("");
         setNominal("");
@@ -196,7 +193,6 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
                 )}
               </div>
 
-              {/* Category */}
               <div className="flex flex-col gap-1.5" ref={categoryRef}>
                 <label className="text-sm font-medium text-gray-700">Category</label>
                 <div className="relative">
@@ -268,7 +264,6 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
 
 
               
-              {/* Description */}
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-medium text-gray-700">Description <span className="text-gray-400 font-normal">(Optional)</span></label>
                 <textarea
