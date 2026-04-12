@@ -169,7 +169,7 @@ export default function TransactionModal({ isOpen, onClose, onSave, limit = 0, i
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm outline-none cursor-pointer hover:border-gray-300 transition-colors flex items-center justify-between select-none text-gray-900"
                     >
                       <span className={!activeCategory ? "text-gray-400" : "truncate"}>
-                        {isCustomCategory ? "Isi Sendiri..." : category}
+                        {isCustomCategory ? (customCategory || "Ketik...") : category}
                       </span>
                       <MdKeyboardArrowDown
                         size={18}

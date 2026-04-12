@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 import { motion } from "framer-motion";
 import StreakCard from "./components/dashboard/StreakCard";
 import SummaryCard from "./components/dashboard/SummaryCard";
@@ -20,18 +20,6 @@ const fadeUp = {
 export default function App() {
   const { user } = useAuth();
   const { transactions } = useTransactions();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    let isMounted = true;
-    getCurrentUser()
-      .then((res) => {
-        if (!isMounted) return;
-        setUser(res.data?.data);
-      })
-      .catch(() => {});
-    return () => { isMounted = false; };
-  }, []);
 
   const { totalSaved, incomeThisMonth, expenseThisMonth } = useMemo(() => {
     const now = new Date();

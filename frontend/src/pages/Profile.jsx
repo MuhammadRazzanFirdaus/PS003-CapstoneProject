@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { getCurrentUser } from "../api/fingo";
+import { useAuth } from "../context/AuthContext";
 import { useTransactions } from "../hooks/useTransactions";
 import ProfileBanner from "../components/profile/ProfileBanner";
 import TopTransactionCard from "../components/profile/TopTransactionCard";
@@ -30,19 +30,10 @@ const MONTHS = ["January", "February", "March", "April", "May", "June", "July", 
 const YEARS = [2024, 2025, 2026];
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
-  const [userLoading, setUserLoading] = useState(true);
+  const { user, loading: userLoading } = useAuth();
   const { transactions, loading: txLoading } = useTransactions();
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-
-  useEffect(() => {
-    setUserLoading(true);
-    getCurrentUser()
-      .then((res) => setUser(res.data?.data || null))
-      .catch(console.error)
-      .finally(() => setUserLoading(false));
-  }, []);
 
   const isLoading = userLoading || txLoading;
 

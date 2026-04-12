@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom";
 import { motion } from "framer-motion";
 import SideBar from "./components/sidebar/SideBar";
 import { SidebarProvider, useSidebar } from "./context/SidebarContext";
-import { AuthProvider } from "./context/AuthContext";
 
 function Layout() {
   const { isOpen } = useSidebar();
@@ -22,10 +21,8 @@ function Layout() {
 
 export default function Template() {
   return (
-    <AuthProvider>
-      <SidebarProvider>
-        <Layout />
-      </SidebarProvider>
-    </AuthProvider>
+    <SidebarProvider>
+      <Layout />
+    </SidebarProvider>
   );
 }

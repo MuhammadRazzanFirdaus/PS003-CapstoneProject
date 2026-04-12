@@ -4,6 +4,7 @@ import { login } from "../../api/fingo";
 import { setAuthToken, setAuthUserId } from "../../utils/auth";
 import AuthLayout from "../../components/auth/AuthLayout";
 import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,6 +13,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +25,7 @@ export default function Login() {
       const userId = res.data.data.user?.id;
       setAuthToken(token);
       setAuthUserId(userId);
+      await refreshUser();
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
