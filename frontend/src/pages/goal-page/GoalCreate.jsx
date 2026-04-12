@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { MdArrowBackIos } from "react-icons/md";
 import { createGoal } from "../../api/fingo";
 import { getAuthUserId } from "../../utils/auth";
+import { toast } from "react-toastify";
 import GoalImageUpload from "../../components/goal-create/GoalImageUpload";
 import GoalFormFields from "../../components/goal-create/GoalFormFields";
 import GoalRecommendation from "../../components/goal-create/GoalRecommendation";
@@ -140,17 +141,21 @@ export default function GoalCreate() {
       if (image) formData.append("image", image);
 
       await createGoal(formData);
+      toast.success("Goal berhasil ditambahkan!");
       navigate("/goals");
     } catch (err) {
       console.log("error response:", err.response?.data);
       const messages = err.response?.data?.errors;
       if (messages) {
         const first = Object.values(messages)[0];
-        setError(Array.isArray(first) ? first[0] : first);
+        const errorMsg = Array.isArray(first) ? first[0] : first;
+        setError(errorMsg);
+        toast.error(errorMsg);
       } else {
-        setError(
-          err.response?.data?.message ?? "Gagal menyimpan goal. Coba lagi.",
-        );
+        const errorMsg =
+          err.response?.data?.message ?? "Gagal menyimpan goal. Coba lagi.";
+        setError(errorMsg);
+        toast.error(errorMsg);
       }
     } finally {
       setLoading(false);

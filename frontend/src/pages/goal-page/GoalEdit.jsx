@@ -4,9 +4,10 @@ import { motion } from "framer-motion";
 import { MdArrowBackIos } from "react-icons/md";
 import { updateGoal, getGoalById } from "../../api/fingo";
 import { getAuthUserId } from "../../utils/auth";
+import GoalImageUpload from "../../components/goal-create/GoalImageUpload";
 import GoalFormFields from "../../components/goal-create/GoalFormFields";
 import GoalRecommendation from "../../components/goal-create/GoalRecommendation";
-
+import axiosInstance from "../../api/axios";
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
   show: (i) => ({
@@ -29,6 +30,8 @@ export default function GoalEdit() {
     initial_amount: "",
     target_date: "",
   });
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState(null);
@@ -47,6 +50,7 @@ export default function GoalEdit() {
           initial_amount: data.initial_amount || "",
           target_date: data.target_date ? data.target_date.split('T')[0] : "",
         });
+        setImagePreview(data.image_url);
       } catch (err) {
         console.error(err);
         setError("Gagal mengambil data goal.");
@@ -59,6 +63,11 @@ export default function GoalEdit() {
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+  
+  const handleImageChange = (file, preview) => {
+    setImage(file);
+    setImagePreview(preview);
   };
 
   const calcDays = () => {
@@ -149,9 +158,18 @@ export default function GoalEdit() {
           ? "not_achieved"
           : "in_progress";
 
-      const payload = { ...form, status, user_id: authUserId };
+      const formData = new FormData();
+      formData.append("_method", "PUT");
+      Object.entries({ ...form, status, user_id: authUserId }).forEach(
+        ([key, val]) => {
+          if (val !== "") formData.append(key, val);
+        }
+      );
+      if (image) formData.append("image", image);
 
-      await updateGoal(id, payload);
+      await axiosInstance.post(`/goals/${id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       navigate(`/goals/${id}`);
     } catch (err) {
       console.log("error response:", err.response?.data);
@@ -192,6 +210,10 @@ export default function GoalEdit() {
         className="bg-white rounded-2xl p-6 flex flex-col gap-6"
       >
         <h2 className="text-lg font-bold">Edit Goal</h2>
+        <GoalImageUpload
+          imagePreview={imagePreview}
+          onImageChange={handleImageChange}
+        />
         <GoalFormFields form={form} onChange={handleChange} />
       </motion.div>
 
